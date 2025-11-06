@@ -1,35 +1,26 @@
 package org.pi.Models;
 
+import java.util.List;
+
 public class EstilistaServicio {
-    private Servicio servicio;
     private int idServicio;
     private int idEstilista;
-    private Persona estilista;
+    private Empleado estilista;
+    private List<Servicio> servicios;
 
     public EstilistaServicio() {
     }
 
-    public EstilistaServicio(Servicio servicio, int idServicio, int idEstilista, Persona estilista) {
-        this.servicio = servicio;
+    public EstilistaServicio(int idServicio, int idEstilista, Empleado estilista, List<Servicio> servicios) {
         this.idServicio = idServicio;
         this.idEstilista = idEstilista;
         this.estilista = estilista;
+        this.servicios = servicios;
     }
+
     public EstilistaServicio(int idServicio, int idEstilista) {
         this.idServicio = idServicio;
         this.idEstilista = idEstilista;
-    }
-    public EstilistaServicio(Servicio servicio, Persona estilista) {
-        this.servicio = servicio;
-        this.estilista = estilista;
-    }
-
-    public Servicio getServicio() {
-        return servicio;
-    }
-
-    public void setServicio(Servicio servicio) {
-        this.servicio = servicio;
     }
 
     public int getIdServicio() {
@@ -48,11 +39,19 @@ public class EstilistaServicio {
         this.idEstilista = idEstilista;
     }
 
-    public Persona getEstilista() {
+    public Empleado getEstilista() {
         return estilista;
     }
 
-    public void setEstilista(Persona estilista) {
+    public void setEstilista(Empleado estilista) {
         this.estilista = estilista;
+    }
+
+    public List<Servicio> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<Servicio> servicios) {
+        this.servicios = servicios;
     }
 }

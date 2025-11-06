@@ -2,38 +2,23 @@ package org.pi.Models;
 
 public class Valoracion {
     private int idValoracion;
-    private int puntuacion;
+    private double puntuacion;
     private Cita cita;
     private int idCita;
-    private Persona cliente;
+    private Usuario cliente;
     private int idCliente;
+    private int idServicio;
+    private Servicio servicio;
 
     public Valoracion() {
     }
-
-    public Valoracion(int idValoracion, int puntuacion, Cita cita, int idCita, Persona cliente, int idCliente) {
-        this.idValoracion = idValoracion;
+    public Valoracion(int id, double puntuacion, int idCita, int idCliente, int idServicio){
+        this.idValoracion = id;
         this.puntuacion = puntuacion;
-        this.cita = cita;
         this.idCita = idCita;
-        this.cliente = cliente;
         this.idCliente = idCliente;
+        this.idServicio = idServicio;
     }
-
-    public Valoracion(int idValoracion, int puntuacion, int idCliente, int idCita){
-        this.idValoracion = idValoracion;
-        this.puntuacion = puntuacion;
-        this.idCliente = idCliente;
-        this.idCita = idCita;
-    }
-
-    public Valoracion(int idValoracion, int puntuacion, Persona cliente, Cita cita) {
-        this.idValoracion = idValoracion;
-        this.puntuacion = puntuacion;
-        this.cliente = cliente;
-        this.cita = cita;
-    }
-
     public int getIdValoracion() {
         return idValoracion;
     }
@@ -42,11 +27,11 @@ public class Valoracion {
         this.idValoracion = idValoracion;
     }
 
-    public int getPuntuacion() {
+    public double getPuntuacion() {
         return puntuacion;
     }
 
-    public void setPuntuacion(int puntuacion) {
+    public void setPuntuacion(double puntuacion) {
         this.puntuacion = puntuacion;
     }
 
@@ -66,11 +51,11 @@ public class Valoracion {
         this.idCita = idCita;
     }
 
-    public Persona getCliente() {
+    public Usuario getCliente() {
         return cliente;
     }
 
-    public void setCliente(Persona cliente) {
+    public void setCliente(Usuario cliente) {
         this.cliente = cliente;
     }
 
@@ -81,4 +66,33 @@ public class Valoracion {
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
     }
+
+    public int getIdServicio() {
+        return idServicio;
+    }
+
+    public void setIdServicio(int idServicio) {
+        this.idServicio = idServicio;
+    }
+
+    public Servicio getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(Servicio servicio) {
+        this.servicio = servicio;
+    }
+
+    public Valoracion(int idValoracion, double puntuacion, Cita cita, int idCita, Usuario cliente, int idCliente, int idServicio, Servicio servicio) {
+        this.idValoracion = idValoracion;
+        this.puntuacion = puntuacion;
+        this.cita = cita;
+        this.idCita = idCita;
+        this.cliente = cliente;
+        this.idCliente = idCliente;
+        this.idServicio = idServicio;
+        this.servicio = servicio;
+    }
+
+
 }

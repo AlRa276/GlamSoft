@@ -1,31 +1,29 @@
 package org.pi.Models;
 
+import java.util.List;
+
 public class CitaServicio {
     private Cita cita;
-    private Servicio servicio;
-    private double precioTotal;
+    private List<Servicio> servicio;
     private int idCita;
     private int idServicio;
 
     public CitaServicio() {
     }
 
-    public CitaServicio(Cita cita, Servicio servicio, double precioTotal, int idCita, int idServicio) {
+    public CitaServicio(Cita cita, List<Servicio> servicio, int idCita, int idServicio) {
         this.cita = cita;
         this.servicio = servicio;
-        this.precioTotal = precioTotal;
         this.idCita = idCita;
         this.idServicio = idServicio;
     }
-    public CitaServicio(double precioTotal, int idCita, int idServicio) {
-        this.precioTotal = precioTotal;
+    public CitaServicio(int idCita, int idServicio) {
         this.idCita = idCita;
         this.idServicio = idServicio;
     }
-    public CitaServicio(Cita cita, Servicio servicio, double precioTotal) {
+    public CitaServicio(Cita cita, List<Servicio> servicio) {
         this.cita = cita;
         this.servicio = servicio;
-        this.precioTotal = precioTotal;
     }
 
     public Cita getCita() {
@@ -36,21 +34,14 @@ public class CitaServicio {
         this.cita = cita;
     }
 
-    public Servicio getServicio() {
+    public List<Servicio> getServicio() {
         return servicio;
     }
 
-    public void setServicio(Servicio servicio) {
+    public void setServicio(List<Servicio> servicio) {
         this.servicio = servicio;
     }
 
-    public double getPrecioTotal() {
-        return precioTotal;
-    }
-
-    public void setPrecioTotal(double precioTotal) {
-        this.precioTotal = precioTotal;
-    }
 
     public int getIdCita() {
         return idCita;

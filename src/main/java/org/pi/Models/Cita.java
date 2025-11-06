@@ -3,51 +3,40 @@ import java.time.LocalDateTime;
 public class Cita {
     private int idCita;
     private String estadoCita;
-    private String locacion;
     private LocalDateTime fechaCita;
     private LocalDateTime fechaSolicitudCita;
     private int idCliente;
     private int idEstilista;
     private int idHorario;
-    private Persona cliente;
-    private Persona estilista;
+    private Usuario cliente;
+    private Empleado estilista;
     private Horario horario;
 
-    public Cita() {
+    public Cita(int idCita, String estadoCita, LocalDateTime fechaCita , LocalDateTime fechaSolicitud,
+                int idCliente, int idEstilista, int idHorario){
+        this.idCita = idCita;
+        this.estadoCita = estadoCita;
+        this.fechaCita = fechaCita;
+        this.fechaSolicitudCita = fechaSolicitud;
+        this.idCliente = idCliente;
+        this.idEstilista = idEstilista;
+        this.idHorario = idHorario;
+    }
+    public Cita(int idCita, String estadoCita, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita,
+                int idCliente, int idEstilista, int idHorario, Usuario cliente, Empleado estilista, Horario horario) {
+        this.idCita = idCita;
+        this.estadoCita = estadoCita;
+        this.fechaCita = fechaCita;
+        this.fechaSolicitudCita = fechaSolicitudCita;
+        this.idCliente = idCliente;
+        this.idEstilista = idEstilista;
+        this.idHorario = idHorario;
+        this.cliente = cliente;
+        this.estilista = estilista;
+        this.horario = horario;
     }
 
-    public Cita(int idCita, String estadoCita, String locacion, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita, int idCliente, int idEstilista, int idHorario, Persona cliente, Persona estilista, Horario horario) {
-        this.idCita = idCita;
-        this.estadoCita = estadoCita;
-        this.locacion = locacion;
-        this.fechaCita = fechaCita;
-        this.fechaSolicitudCita = fechaSolicitudCita;
-        this.idCliente = idCliente;
-        this.idEstilista = idEstilista;
-        this.idHorario = idHorario;
-        this.cliente = cliente;
-        this.estilista = estilista;
-        this.horario = horario;
-    }
-    public Cita(int idCita, String estadoCita, String locacion, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita, int idCliente, int idEstilista, int idHorario) {
-        this.idCita = idCita;
-        this.estadoCita = estadoCita;
-        this.locacion = locacion;
-        this.fechaCita = fechaCita;
-        this.fechaSolicitudCita = fechaSolicitudCita;
-        this.idCliente = idCliente;
-        this.idEstilista = idEstilista;
-        this.idHorario = idHorario;
-    }
-    public Cita(int idCita, String estadoCita, String locacion, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita, Persona cliente, Persona estilista, Horario horario) {
-        this.idCita = idCita;
-        this.estadoCita = estadoCita;
-        this.locacion = locacion;
-        this.fechaCita = fechaCita;
-        this.fechaSolicitudCita = fechaSolicitudCita;
-        this.cliente = cliente;
-        this.estilista = estilista;
-        this.horario = horario;
+    public Cita() {
     }
 
     public int getIdCita() {
@@ -66,13 +55,6 @@ public class Cita {
         this.estadoCita = estadoCita;
     }
 
-    public String getLocacion() {
-        return locacion;
-    }
-
-    public void setLocacion(String locacion) {
-        this.locacion = locacion;
-    }
 
     public LocalDateTime getFechaCita() {
         return fechaCita;
@@ -114,19 +96,19 @@ public class Cita {
         this.idHorario = idHorario;
     }
 
-    public Persona getCliente() {
+    public Usuario getCliente() {
         return cliente;
     }
 
-    public void setCliente(Persona cliente) {
+    public void setCliente(Usuario cliente) {
         this.cliente = cliente;
     }
 
-    public Persona getEstilista() {
+    public Empleado getEstilista() {
         return estilista;
     }
 
-    public void setEstilista(Persona estilista) {
+    public void setEstilista(Empleado estilista) {
         this.estilista = estilista;
     }
 

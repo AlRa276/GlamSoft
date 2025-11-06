@@ -1,9 +1,7 @@
 package org.pi.Repositories;
 import org.pi.Models.Categoria;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,18 +43,29 @@ public class CategoriaRepository {
         return categoria;
     }
 
-    public void saveCategoria(Categoria categoria) throws  SQLException {
-        String sql = "INSERT INTO categoria(id_categoria, nombre_categoria)"+"VALUES(?,?)";
+    public int saveCategoria(Categoria categoria) throws  SQLException {
+        String sql = "INSERT INTO categoria(nombre_categoria) VALUES(?)";
         try(
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
+                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         )  {
-            stmt.setInt(1, categoria.getIdCategoria());
-            stmt.setString(2,categoria.getNombreCategoria());
-            stmt.executeUpdate();
-
+        stmt.setString(1,categoria.getNombreCategoria());
+        //verificacion
+        int filasAfectadas = stmt.executeUpdate();
+        if (filasAfectadas == 0){
+            throw new SQLException("La insercion fallo");
+        }
+        //encontrar id
+        try(ResultSet claves = stmt.getGeneratedKeys()){
+            if(claves.next()){
+                int id = claves.getInt(1);
+                return id;
+            } else {
+                throw new SQLException("No se encontro id");
+            }
         }
     }
+}
 
     public void deleteCategoria(int id) throws SQLException{
         String sql = "DELETE FROM categoria WHERE id_categoria = ?";
@@ -65,19 +74,31 @@ public class CategoriaRepository {
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            int filasAfectadas = stmt.executeUpdate();
+            //verificacion
+            if (filasAfectadas == 0){
+                System.out.println("No se encontro el id");
+            }else {
+                System.out.println("eliminacion exitosa");
+            }
         }
     }
 
-    public void updateCategoria(int id, Categoria categoria) throws SQLException {
-        String sql = "UPDATE categoria SET nombre_categoria WHERE id_categoria = ?";
+    public void updateCategoria(Categoria categoria) throws SQLException {
+        String sql = "UPDATE categoria SET nombre_categoria = ? WHERE id_categoria = ?";
         try(
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ) {
             stmt.setString(1,categoria.getNombreCategoria());
-            stmt.setInt(2,id);
-            stmt.executeUpdate();
+            stmt.setInt(2,categoria.getIdCategoria());
+            //verificacion
+            int filasAfectadas = stmt.executeUpdate();
+            if (filasAfectadas == 0){
+                System.out.println("No se encontro el id");
+            }else {
+                System.out.println("se actualizo el elemento con exito");
+            }
 
         }
     }

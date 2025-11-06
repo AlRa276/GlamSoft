@@ -44,4 +44,8 @@ public class Horario {
     public void setDiaSemana(String diaSemana) {
         this.diaSemana = diaSemana;
     }
+
+    public String getDiaSemana() {
+        return diaSemana;
+    }
 }
