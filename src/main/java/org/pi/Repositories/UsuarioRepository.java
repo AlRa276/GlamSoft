@@ -96,14 +96,14 @@ public class UsuarioRepository {
         }
     }
 
-    public void updateUser(String email, Usuario usuario) throws SQLException {
+    public void updateUser(Usuario usuario) throws SQLException {
         String sql = "UPDATE usuario SET password = ? WHERE email = ?";
         try(
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
         ) {
             stmt.setString(1, usuario.getPassword());
-            stmt.setString(2,email);
+            stmt.setString(2,usuario.getEmail());
             stmt.executeUpdate();
         }
     }

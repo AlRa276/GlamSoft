@@ -53,14 +53,14 @@ public class EstilistaServicioRepository {
         }
         return servicios;
     }
-    public void save(int idEstilista, int idServicio) throws SQLException{
+    public void save(EstilistaServicio relacion) throws SQLException{
         String sql = "INSERT INTO estilista_servicio(id_estilista, id_servicio) VALUES(?,?)";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ){
-            stmt.setInt(1,idEstilista);
-            stmt.setInt(2,idServicio);
+            stmt.setInt(1,relacion.getIdEstilista());
+            stmt.setInt(2,relacion.getIdServicio());
             int filasAfectadas = stmt.executeUpdate();
             if (filasAfectadas == 0){
                 throw new SQLException("La insercion fallo");

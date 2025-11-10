@@ -72,8 +72,8 @@ public class ServicioRepository {
             stmt.setString(5, servicio.getDescripcion());
             stmt.setInt(6, servicio.getIdCategoria());
 
-            // Manejo de FK nullable (formulario_id)
-            if (servicio.getIdFormulario() == null) {
+
+            if (servicio.getIdFormulario() == 0) {
                 stmt.setNull(7, Types.INTEGER);
             } else {
                 stmt.setInt(7, servicio.getIdFormulario());
@@ -122,8 +122,8 @@ public class ServicioRepository {
             stmt.setString(5, servicio.getDescripcion());
             stmt.setInt(6, servicio.getIdCategoria());
 
-            // Manejo de FK nullable (formulario_id)
-            if (servicio.getIdFormulario() == null) {
+
+            if (servicio.getIdFormulario() == 0 ) {
                 stmt.setNull(7, Types.INTEGER);
             } else {
                 stmt.setInt(7, servicio.getIdFormulario());

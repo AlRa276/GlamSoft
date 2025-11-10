@@ -28,7 +28,7 @@ public class RolService {
         rolRepository.deleteRol(idRol);
     }
 
-    public void updateRol(int idRol, Rol rol) throws SQLException{
-        rolRepository.updateRol(idRol,rol);
+    public void updateRol( Rol rol) throws SQLException{
+        rolRepository.updateRol(rol);
     }
 }

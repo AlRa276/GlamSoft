@@ -60,7 +60,7 @@ public class EmpleadoRepository {
     }
 
 
-    public int save(Empleado empleado, String password) throws SQLException {
+    public int save(Empleado empleado) throws SQLException {
         String sqlUsuario = "INSERT INTO usuario (email, password, rol_id) VALUES (?, ?, ?)";
         String sqlEmpleado = "INSERT INTO empleado (nombre, telefono, id_usuario) VALUES (?, ?, ?)";
 
@@ -73,7 +73,7 @@ public class EmpleadoRepository {
             // usuario
             try (PreparedStatement stmtUsuario = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 stmtUsuario.setString(1, empleado.getEmail());
-                stmtUsuario.setString(2, password);
+                stmtUsuario.setString(2, empleado.getPassword());
                 stmtUsuario.setInt(3, empleado.getIdRol());
                 //verificacion
                 if (stmtUsuario.executeUpdate() == 0) {

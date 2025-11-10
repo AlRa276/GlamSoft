@@ -27,7 +27,7 @@ public class CategoriaService {
         categoriaRepository.deleteCategoria(id);
     }
 
-    public void updateCategoria(int id, Categoria categoria) throws SQLException{
-        categoriaRepository.updateCategoria(id,categoria);
+    public void updateCategoria( Categoria categoria) throws SQLException{
+        categoriaRepository.updateCategoria(categoria);
     }
 }

@@ -53,22 +53,21 @@ public class FormularioRepository {
         }
     }
 
-    public void delete(int id)throws SQLException{
+   public void delete(int id_formulario)throws SQLException{
         String sql = "DELETE FROM formulario WHERE id_formulario = ?";
-        try (
+        try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ){
-            stmt.setInt(1, id);
+            stmt.setInt(1,id_formulario);
             int filasAfectadas = stmt.executeUpdate();
             //verificacion
             if (filasAfectadas == 0){
                 System.out.println("No se encontro el id");
-            }else {
-                System.out.println("eliminacion exitosa");
             }
         }
-    }
+   }
+
     public void update(Formulario formulario)throws SQLException{
         String sql = "UPDATE formulario SET nombre_formulario = ? WHERE id_formulario = ?";
         try(

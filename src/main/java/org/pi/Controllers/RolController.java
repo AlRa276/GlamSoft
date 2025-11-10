@@ -53,9 +53,8 @@ public class RolController {
         }
         public void updateRol(Context ctx){
             try{
-                int id = Integer.parseInt(ctx.pathParam("id"));
                 Rol rol = ctx.bodyAsClass(Rol.class);
-                rolService.updateRol(id,rol);
+                rolService.updateRol(rol);
                 ctx.status(204).result("Se creo el elemento con exito");
             } catch (SQLException e) {
                 ctx.status(404).result("No se encontro el elemento");

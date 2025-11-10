@@ -29,7 +29,7 @@ public class EstilistaHorarioRepository {
         }
         return estilistaHorarios;
     }
-    //lista de horario de un estilista
+    //lista de horarios de un estilista
     public List<Horario> find(int idEstilista) throws SQLException{
         List<Horario> horarios = new ArrayList<>();
         String sql = "SELECT h.id_horario, h.dia_semana, h.hora_inicio, h.hora_final " +
@@ -58,14 +58,14 @@ public class EstilistaHorarioRepository {
         return horarios;
     }
 
-    public void save(int idEstilista , int idHorario) throws SQLException{
+    public void save(EstilistaHorario relacion) throws SQLException{
         String sql = "INSERT INTO estilista_horario(id_estilista, id_horario) VALUES (?,?)";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ){
-            stmt.setInt(1, idEstilista);
-            stmt.setInt(2,idHorario);
+            stmt.setInt(1, relacion.getIdEstilista());
+            stmt.setInt(2, relacion.getIdHorario());
             int filasAfectadas = stmt.executeUpdate();
             if (filasAfectadas == 0){
                 throw new SQLException("La insercion fallo");

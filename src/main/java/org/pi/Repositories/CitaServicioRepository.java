@@ -9,9 +9,7 @@ import java.util.List;
 
 public class CitaServicioRepository {
 
-    /**
-     * Recupera todas las relaciones Cita-Servicio de la base de datos.
-     */
+
     public List<CitaServicio> findAll() throws SQLException {
         List<CitaServicio> relaciones = new ArrayList<>();
         String sql = "SELECT * FROM cita_servicio";
@@ -30,9 +28,7 @@ public class CitaServicioRepository {
         return relaciones;
     }
 
-    /**
-     * Busca una relación Cita-Servicio específica por su clave compuesta.
-     */
+
     public CitaServicio find(int idCita, int idServicio) throws SQLException {
         CitaServicio relacion = null;
         String sql = "SELECT * FROM cita_servicio WHERE id_cita = ? AND id_servicio = ?";
@@ -51,9 +47,7 @@ public class CitaServicioRepository {
         return relacion;
     }
 
-    /**
-     * Guarda una nueva relación Cita-Servicio en la base de datos.
-     */
+
     public void save(CitaServicio relacion) throws SQLException {
         String sql = "INSERT INTO cita_servicio(id_cita, id_servicio) VALUES(?, ?)";
         try (
@@ -72,9 +66,7 @@ public class CitaServicioRepository {
         }
     }
 
-    /**
-     * Elimina una relación Cita-Servicio específica usando su clave compuesta.
-     */
+
     public void delete(int idCita, int idServicio) throws SQLException {
         String sql = "DELETE FROM cita_servicio WHERE id_cita = ? AND id_servicio = ?";
         try (
@@ -91,7 +83,4 @@ public class CitaServicioRepository {
             }
         }
     }
-
-    // NOTA: El método update no se aplica a tablas de relación N:M puras, ya que solo contienen la clave.
-    // Para cambiar una clave, se realiza un DELETE seguido de un SAVE.
 }

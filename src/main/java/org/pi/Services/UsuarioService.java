@@ -32,8 +32,8 @@ public class UsuarioService {
         usuarioRepository.deleteUser(email);
     }
 
-    public void updateUser(String email, Usuario usuario) throws SQLException{
-        usuarioRepository.updateUser(email, usuario);
+    public void updateUser( Usuario usuario) throws SQLException{
+        usuarioRepository.updateUser( usuario);
     }
 
 }

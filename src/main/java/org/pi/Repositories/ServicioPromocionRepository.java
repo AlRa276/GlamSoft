@@ -1,9 +1,12 @@
 package org.pi.Repositories;
 
 import org.pi.Config.DBconfig;
+import org.pi.Models.Horario;
+import org.pi.Models.Servicio;
 import org.pi.Models.ServicioPromocion;
 
 import java.sql.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,22 +30,32 @@ public class ServicioPromocionRepository {
         return relaciones;
     }
 
-    public ServicioPromocion find(int idServicio, int idPromocion) throws SQLException {
-        ServicioPromocion relacion = null;
-        String sql = "SELECT * FROM servicio_promocion WHERE id_servicio = ? AND id_promocion = ?";
-        try (
-                Connection conn = DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)
-        ) {
-            stmt.setInt(1, idServicio);
-            stmt.setInt(2, idPromocion);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    relacion = new ServicioPromocion(idServicio, idPromocion);
-                }
-            }
-        }
-        return relacion;
+    //lista de servicios que conforman una promocion
+    public List<Servicio> find(int idPromocion) throws SQLException {
+       List<Servicio> servicios = new ArrayList<>();
+       String sql = " SELECT s.nombre_servicio, s.precio, s.descripcion " +
+               "FROM servicio s INNER JOIN servicio_promocion sp " +
+               "ON s.id_servicio = sp.id_servicio " +
+               "INNER JOIN promocion p ON sp.id_promocion = p.id_promocion " +
+               "WHERE p.id_promocion";
+       try(
+               Connection conn = DBconfig.getDataSource().getConnection();
+               PreparedStatement stmt = conn.prepareStatement(sql);
+               ){
+           stmt.setInt(1,idPromocion);
+           try (ResultSet rs = stmt.executeQuery()) {
+               while (rs.next()) {
+                   String nombreServicio = rs.getString("nombre_servicio");
+                   double precio = rs.getDouble("precio");
+                   String descripcion = rs.getString("descripcion");
+                   Servicio servicio = new Servicio(nombreServicio,precio,descripcion);
+                   servicios.add(servicio);
+
+               }
+           }
+
+       }
+       return servicios;
     }
 
     public void save(ServicioPromocion relacion) throws SQLException {
@@ -77,5 +90,5 @@ public class ServicioPromocionRepository {
             }
         }
     }
-    // Se omite el método update.
+
 }

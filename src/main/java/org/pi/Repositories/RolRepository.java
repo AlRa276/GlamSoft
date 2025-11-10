@@ -69,14 +69,14 @@ public class RolRepository {
         }
     }
 
-    public void updateRol(int idRol, Rol rol) throws SQLException {
+    public void updateRol( Rol rol) throws SQLException {
         String sql = "UPDATE rol SET nombre_rol WHERE id_rol = ?";
         try(
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
         ) {
             stmt.setString(1,rol.getNombreRol());
-            stmt.setInt(2,idRol);
+            stmt.setInt(2,rol.getIdRol());
             stmt.executeUpdate();
 
         }

@@ -2,7 +2,7 @@ package org.pi.Repositories;
 
 import org.pi.Config.DBconfig;
 import org.pi.Models.Promocion;
-
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

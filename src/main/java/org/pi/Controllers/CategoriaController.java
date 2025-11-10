@@ -51,9 +51,8 @@ public class CategoriaController {
     }
     public void updateCategoria(Context ctx){
         try{
-            int id = Integer.parseInt(ctx.pathParam("id"));
             Categoria categoria = ctx.bodyAsClass(Categoria.class);
-            categoriaService.updateCategoria(id,categoria);
+            categoriaService.updateCategoria(categoria);
             ctx.status(204).result("Se creo el elemento con exito");
         } catch (SQLException e) {
             ctx.status(404).result("No se encontro el elemento");
