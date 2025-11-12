@@ -17,6 +17,52 @@ public class UsuarioController {
         this.tokenManager = tokenManager;
     }
 
+    public void registrarUsuario(Context ctx){
+        try{
+            Usuario usuario = ctx.bodyAsClass(Usuario.class);
+            String passHased = Password.hash(usuario.getPassword()).withBcrypt().getResult();
+            usuario.setPassword(passHased);
+            usuarioService.saveUser(usuario);
+            String token = tokenManager.issueToken(""+usuario.getIdUsuario());
+            ctx.status(201).json(Map.of(
+                    "userId", usuario.getIdUsuario(),
+                    "token", token,
+                    "success", true,
+                    "message", "Usuario registrado con exito"
+            ));
+        }catch (SQLException e){
+            ctx.status(500).result("Error al registrar el usuario" + e.getMessage());
+        }catch (Exception e){
+            ctx.status(500).result(e.getMessage());
+        }
+    }
+    public void verificarUsuario(Context ctx){
+        Usuario usuario = ctx.bodyAsClass(Usuario.class);
+        try{
+            Usuario user = usuarioService.findByUser(usuario);
+            if (user == null){
+                throw new SQLException("Usuario no encontrado");
+            }
+            boolean rs = Password.check(usuario.getPassword(),user.getPassword()).withBcrypt();
+            if (rs){
+                String token = tokenManager.issueToken(user.getIdUsuario()+"");
+                ctx.json(Map.of(
+                        "userID",user.getIdUsuario(),
+                        "token",token,
+                        "success",true,
+                        "mensage","Usuario verificado"
+                ));
+            }  else {
+                ctx.status(404).result("Usuario no encontrado");
+            }
+        } catch (SQLException e) {
+            ctx.status(403).json(Map.of(
+                    "error","Credenciales invalidad",
+                    "success", false,
+                    "message",e.getMessage()
+            ));
+        }
+    }
     public void findAllUsers(Context ctx){
         try{
             List<Usuario> usuarios = usuarioService.findAllUsers();
@@ -25,60 +71,7 @@ public class UsuarioController {
             ctx.status(404).result("Elementos no encontrados");
         }
     }
-/*
-    //registrar usuarios
-    public void saveUser(Context ctx){
-        try{
-            Usuario usuario = ctx.bodyAsClass(Usuario.class);
-            String pswdhased = Password.hash(usuario.getPassword()).withBcrypt().getResult();
-            usuario.setPassword(pswdhased);
-            usuarioService.saveUser(usuario);
-            String token = tokenManager.issueToken(""+usuario.getIdUsuario());
-            ctx.status(201).json(Map.of(
-                    "userId", usuario.getIdUsuario(),
-                    "token", token,
-                    "success", true,
-                    "message","Usuario registrado correctamente"
-            ));
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al registrar el usuario" +e.getMessage());
-        } catch (Exception e) {
-            ctx.status(500).result(e.getMessage());
-        }
-    }
-    //verificaDatos
 
-    public void verificarUsuario(Context ctx){
-        Usuario usuario = ctx.bodyAsClass(Usuario.class);
-        try{
-            Usuario user = usuarioService.findByUser(usuario);
-            if(user == null) {
-                throw new SQLException("Usuario no encontrado");
-            }
-            boolean rs = Password.check(usuario.getPassword(),user.getPassword()).withBcrypt();
-            if(rs) {
-                //ctx.status(201).result("Usuario verificado correctamente");
-                String token = tokenManager.issueToken(user.getIdUsuario()+"");
-                ctx.json(Map.of(
-                        "userId", user.getIdUsuario(),
-                        "token", token,
-                        "success", true,
-                        "message","Usuario verificado correctamente"
-                ));
-            }
-            else {
-                ctx.status(404).result("Usuario no encontrado");
-            }
-        }catch (SQLException e){
-            ctx.status(403).json(Map.of(
-                    "error", "Credenciales inválidas",
-                    "success", false,
-                    "message",e.getMessage()
-            ));
-        }
-
-    }
-*/
     public void findUser(Context ctx){
         try{
             String email = ctx.pathParam("email");

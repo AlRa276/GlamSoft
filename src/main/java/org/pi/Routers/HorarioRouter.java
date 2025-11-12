@@ -11,7 +11,7 @@ public class HorarioRouter {
     }
 
     public void register(Javalin app){
-        app.get("/horarios",horarioController::findALL);
+        app.get("/horarios",horarioController::findAll);
         app.post("/horarios",horarioController::saveHorario);
         app.delete("/horarios/{id}",horarioController::deleteHorario);
         app.patch("/horarios",horarioController::updateHorario);

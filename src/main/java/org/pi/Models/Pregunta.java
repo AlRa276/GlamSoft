@@ -5,16 +5,15 @@ public class Pregunta {
     private String pregunta;
     private String respuesta;
     private int idFormulario;
-    private Formulario formulario;
+
+    public Pregunta() {
+    }
 
     public Pregunta(int idPregunta, String pregunta, String respuesta, int idFormulario) {
         this.idPregunta = idPregunta;
         this.pregunta = pregunta;
         this.respuesta = respuesta;
         this.idFormulario = idFormulario;
-    }
-
-    public Pregunta() {
     }
 
     public int getIdPregunta() {
@@ -47,13 +46,5 @@ public class Pregunta {
 
     public void setIdFormulario(int idFormulario) {
         this.idFormulario = idFormulario;
-    }
-
-    public Formulario getFormulario() {
-        return formulario;
-    }
-
-    public void setFormulario(Formulario formulario) {
-        this.formulario = formulario;
     }
 }

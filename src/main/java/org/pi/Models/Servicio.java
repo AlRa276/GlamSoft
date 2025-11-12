@@ -8,12 +8,13 @@ public class Servicio {
     private double precio;
     private String descripcion;
     private int idCategoria;
-    private Categoria categoria;
     private int idFormulario;
-    private Formulario formulario;
 
-    public Servicio(int idServicio, String imagenURL, String nombreServicio, int duracionMinutos,
-                    double precio, String descripcion, int idCategoria, Categoria categoria, int idFormulario, Formulario formulario) {
+    public Servicio() {
+    }
+
+    public Servicio(int idServicio, String imagenURL,
+                    String nombreServicio, int duracionMinutos, double precio, String descripcion, int idCategoria, int idFormulario) {
         this.idServicio = idServicio;
         this.imagenURL = imagenURL;
         this.nombreServicio = nombreServicio;
@@ -21,33 +22,19 @@ public class Servicio {
         this.precio = precio;
         this.descripcion = descripcion;
         this.idCategoria = idCategoria;
-        this.categoria = categoria;
         this.idFormulario = idFormulario;
-        this.formulario = formulario;
     }
-    public Servicio(int idServicio, String nombreServicio, String descripcion){
-        this.idServicio = idServicio;
-        this.nombreServicio = nombreServicio;
-        this.descripcion = descripcion;
-    }
-    public Servicio(String nombreServicio, double precio, String descripcion){
-        this.nombreServicio = nombreServicio;
-        this.precio = precio;
-        this.descripcion = descripcion;
-    }
-     public Servicio(int idServicio, String imagen, String nombreServicio, int duracionMinutos, double precio,
-                     String descripcion, int categoriaId, int  formularioId){
-        this.idServicio = idServicio;
-        this.imagenURL = imagen;
-        this.nombreServicio = nombreServicio;
-        this.duracionMinutos = duracionMinutos;
-        this.precio = precio;
-        this.descripcion = descripcion;
-        this.idCategoria = categoriaId;
-        this.idFormulario = formularioId;
-     }
 
-    public Servicio() {
+    public Servicio(int idServicio, String nombreServicio, String descripcion) {
+        this.idServicio = idServicio;
+        this.nombreServicio = nombreServicio;
+        this.descripcion = descripcion;
+    }
+
+    public Servicio(String nombreServicio, double precio, String descripcion) {
+        this.nombreServicio = nombreServicio;
+        this.precio = precio;
+        this.descripcion = descripcion;
     }
 
     public int getIdServicio() {
@@ -106,14 +93,6 @@ public class Servicio {
         this.idCategoria = idCategoria;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
     public int getIdFormulario() {
         return idFormulario;
     }
@@ -121,13 +100,4 @@ public class Servicio {
     public void setIdFormulario(int idFormulario) {
         this.idFormulario = idFormulario;
     }
-
-    public Formulario getFormulario() {
-        return formulario;
-    }
-
-    public void setFormulario(Formulario formulario) {
-        this.formulario = formulario;
-    }
-
 }

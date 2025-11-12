@@ -1,7 +1,7 @@
 package org.pi.Controllers;
-
 import io.javalin.http.Context;
 import org.pi.Models.Promocion;
+import org.pi.Models.Servicio;
 import org.pi.Services.PromocionService;
 
 import java.sql.SQLException;
@@ -14,50 +14,93 @@ public class PromocionController {
         this.promocionService = promocionService;
     }
 
-    public void findAll(Context ctx){
+    // 🔹 GET: listar todas las promociones
+    public void findAll(Context ctx) {
         try {
-            List<Promocion> promociones = promocionService.findAllP();
-            ctx.json(promociones);
+            List<Promocion> promociones = promocionService.findAll();
+            ctx.status(200).json(promociones);
         } catch (SQLException e) {
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(500).result("Error al obtener promociones: " + e.getMessage());
         }
     }
 
-    public void findPromocion(Context ctx){
+    // 🔹 GET: obtener una promoción por ID
+    public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
-            Promocion promocion = promocionService.findP(id);
-            ctx.json(promocion);
+            Promocion promocion = promocionService.findById(id);
+            ctx.status(200).json(promocion);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
-        }
-    }
-    public void savePromocion(Context ctx){
-        try {
-            Promocion promocion = ctx.bodyAsClass(Promocion.class);
-            promocionService.saveP(promocion);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
-        } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
+            ctx.status(500).result("Error al buscar la promoción: " + e.getMessage());
         }
     }
 
-    public void deletePromocion(Context ctx){
-        try {
-            int id = Integer.parseInt(ctx.pathParam("id"));
-            promocionService.deleteP(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
-        } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
-        }
-    }
-    public void updatePromocion(Context ctx){
+    // 🔹 POST: crear una nueva promoción
+    public void savePromocion(Context ctx) {
         try {
             Promocion promocion = ctx.bodyAsClass(Promocion.class);
-            promocionService.updateP(promocion);
-            ctx.status(204).result("Se creo el elemento con exito");
+            int idGenerado = promocionService.save(promocion);
+            ctx.status(201).result("Promoción creada con ID: " + idGenerado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error al crear la promoción: " + e.getMessage());
+        }
+    }
+
+    // 🔹 PUT: actualizar promoción existente
+    public void updatePromocion(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            Promocion promocion = ctx.bodyAsClass(Promocion.class);
+            promocion.setIdPromocion(id);
+            promocionService.update(promocion);
+            ctx.status(200).result("Promoción actualizada correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al actualizar promoción: " + e.getMessage());
+        }
+    }
+
+    // 🔹 DELETE: eliminar promoción
+    public void deletePromocion(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            promocionService.delete(id);
+            ctx.status(200).result("Promoción eliminada correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al eliminar la promoción: " + e.getMessage());
+        }
+    }
+
+    // 🔹 GET: obtener servicios de una promoción
+    public void getServicios(Context ctx) {
+        try {
+            int idPromocion = Integer.parseInt(ctx.pathParam("id"));
+            List<Servicio> servicios = promocionService.findServicios(idPromocion);
+            ctx.status(200).json(servicios);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener servicios: " + e.getMessage());
+        }
+    }
+
+    // 🔹 POST: asignar servicio a promoción
+    public void saveServicio(Context ctx) {
+        try {
+            Promocion relacion = ctx.bodyAsClass(Promocion.class);
+            promocionService.saveServicio(relacion);
+            ctx.status(201).result("Servicio asignado correctamente a la promoción");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al asignar servicio: " + e.getMessage());
         }
     }
 }

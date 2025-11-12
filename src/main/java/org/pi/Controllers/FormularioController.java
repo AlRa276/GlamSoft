@@ -2,6 +2,7 @@ package org.pi.Controllers;
 
 import io.javalin.http.Context;
 import org.pi.Models.Formulario;
+import org.pi.Repositories.FormularioRepository;
 import org.pi.Services.FormularioService;
 
 import java.sql.SQLException;
@@ -14,39 +15,65 @@ public class FormularioController {
         this.formularioService = formularioService;
     }
 
-    public void findAll(Context ctx){
-        try{
-            List<Formulario> formularios = formularioService.findAllF();
+    // 🔹 Obtener todos los formularios
+    public void findAll(Context ctx) {
+        try {
+            List<Formulario> formularios = formularioService.findAllFormulario();
             ctx.json(formularios);
         } catch (SQLException e) {
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(500).result("Error al obtener formularios: " + e.getMessage());
         }
     }
-    public void saveFormulario(Context ctx){
-        try{
-            Formulario formulario = ctx.bodyAsClass(Formulario.class);
-            formularioService.saveF(formulario);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
-        } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
-        }
-    }
-    public void deleteFormulario(Context ctx){
-        try{
+
+    // 🔹 Obtener formulario por ID
+    public void findById(Context ctx) {
+        try {
             int id = Integer.parseInt(ctx.pathParam("id"));
-            formularioService.deleteF(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
-        } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            Formulario formulario = formularioService.findFormulario(id);
+            ctx.json(formulario);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (Exception e) {
+            ctx.status(404).result(e.getMessage());
         }
     }
-    public void updateFormulario(Context ctx){
-        try{
+
+    // 🔹 Crear nuevo formulario
+    public void save(Context ctx) {
+        try {
             Formulario formulario = ctx.bodyAsClass(Formulario.class);
-            formularioService.update(formulario);
-            ctx.status(204).result("Se creo el elemento con exito");
+            int idGenerado = formularioService.saveFormulario(formulario);
+            ctx.status(201).result("Formulario creado con ID: " + idGenerado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error al crear el formulario: " + e.getMessage());
+        }
+    }
+
+    // 🔹 Actualizar formulario
+    public void updateFormulario(Context ctx) {
+        try {
+            Formulario formulario = ctx.bodyAsClass(Formulario.class);
+            formularioService.updateFormulario(formulario);
+            ctx.status(200).result("Formulario actualizado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al actualizar el formulario: " + e.getMessage());
+        }
+    }
+
+    // 🔹 Eliminar formulario
+    public void deleteFormulario(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            formularioService.deleteFormulario(id);
+            ctx.status(200).result("Formulario eliminado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al eliminar el formulario: " + e.getMessage());
         }
     }
 }

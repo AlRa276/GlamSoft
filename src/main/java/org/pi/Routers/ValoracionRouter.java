@@ -11,7 +11,7 @@ public class ValoracionRouter {
     }
 
     public void register(Javalin app){
-        app.get("/valoraciones",valoracionController::findALLvaloracio);
+        app.get("/valoraciones",valoracionController::findAll);
         app.post("/valoraciones",valoracionController::saveValoracion);
         app.delete("/valoraciones/{id}",valoracionController::deleteValoracion);
     }

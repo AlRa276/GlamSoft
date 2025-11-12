@@ -14,7 +14,7 @@ public class EmpleadoRepository {
 
     public List<Empleado> findAll(int idRol) throws SQLException {
         List<Empleado> empleados = new ArrayList<>();
-        String sql = "SELECT  u.email, e.id_empleado, e.nombre, e.telefono " +
+        String sql = "SELECT  u.email, e.nombre, e.telefono " +
                 "FROM empleado e INNER JOIN usuario u ON e.id_usuario = u.id_usuario " +
                 "INNER JOIN rol r ON u.id_rol = r.id_rol " +
                 "WHERE r.id_rol = ? ";
@@ -26,10 +26,9 @@ public class EmpleadoRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String email = rs.getString("email");
-                    int id = rs.getInt("id_empleado");
                     String nombre = rs.getString("nombre");
                     String telefono = rs.getString("telefono");
-                    Empleado empleado = new Empleado(idRol, email, id, nombre, telefono);
+                    Empleado empleado = new Empleado(idRol, email, nombre, telefono);
                     empleados.add(empleado);
                 }
             }
@@ -52,7 +51,7 @@ public class EmpleadoRepository {
                     String email = rs.getString("email");
                     String nombre = rs.getString("nombre");
                     String telefono = rs.getString("telefono");
-                    empleado = new Empleado(idUsuario, email, nombre, telefono, id);
+                    empleado = new Empleado(email, nombre, telefono);
                 }
             }
         }

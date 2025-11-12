@@ -1,5 +1,8 @@
 package org.pi.Models;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+
 public class Cita {
     private int idCita;
     private String estadoCita;
@@ -8,22 +11,14 @@ public class Cita {
     private int idCliente;
     private int idEstilista;
     private int idHorario;
-    private Usuario cliente;
-    private Empleado estilista;
-    private Horario horario;
+    private List<Integer> servicios;
 
-    public Cita(int idCita, String estadoCita, LocalDateTime fechaCita , LocalDateTime fechaSolicitud,
-                int idCliente, int idEstilista, int idHorario){
-        this.idCita = idCita;
-        this.estadoCita = estadoCita;
-        this.fechaCita = fechaCita;
-        this.fechaSolicitudCita = fechaSolicitud;
-        this.idCliente = idCliente;
-        this.idEstilista = idEstilista;
-        this.idHorario = idHorario;
+    //CONSTRUCTORES
+    public Cita() {
     }
-    public Cita(int idCita, String estadoCita, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita,
-                int idCliente, int idEstilista, int idHorario, Usuario cliente, Empleado estilista, Horario horario) {
+
+    public Cita(int idCita, String estadoCita, LocalDateTime fechaCita,
+                LocalDateTime fechaSolicitudCita, int idCliente, int idEstilista, int idHorario, List<Integer> servicios) {
         this.idCita = idCita;
         this.estadoCita = estadoCita;
         this.fechaCita = fechaCita;
@@ -31,13 +26,11 @@ public class Cita {
         this.idCliente = idCliente;
         this.idEstilista = idEstilista;
         this.idHorario = idHorario;
-        this.cliente = cliente;
-        this.estilista = estilista;
-        this.horario = horario;
+        this.servicios = servicios;
     }
 
-    public Cita() {
-    }
+    //GETTERS AND SETTERS
+
 
     public int getIdCita() {
         return idCita;
@@ -54,7 +47,6 @@ public class Cita {
     public void setEstadoCita(String estadoCita) {
         this.estadoCita = estadoCita;
     }
-
 
     public LocalDateTime getFechaCita() {
         return fechaCita;
@@ -96,27 +88,11 @@ public class Cita {
         this.idHorario = idHorario;
     }
 
-    public Usuario getCliente() {
-        return cliente;
+    public List<Integer> getServicios() {
+        return servicios;
     }
 
-    public void setCliente(Usuario cliente) {
-        this.cliente = cliente;
-    }
-
-    public Empleado getEstilista() {
-        return estilista;
-    }
-
-    public void setEstilista(Empleado estilista) {
-        this.estilista = estilista;
-    }
-
-    public Horario getHorario() {
-        return horario;
-    }
-
-    public void setHorario(Horario horario) {
-        this.horario = horario;
+    public void setServicios(List<Integer> servicios) {
+        this.servicios = servicios;
     }
 }

@@ -1,9 +1,9 @@
 package org.pi.Controllers;
 
+
 import io.javalin.http.Context;
 import org.pi.Models.Valoracion;
 import org.pi.Services.ValoracionService;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,31 +14,39 @@ public class ValoracionController {
         this.valoracionService = valoracionService;
     }
 
-    public void findALLvaloracio(Context ctx){
+    // GET: Obtener todas las valoraciones
+    public void findAll(Context ctx) {
         try {
-            List<Valoracion> valoraciones = valoracionService.findAllV();
-            ctx.json(valoraciones);
+            List<Valoracion> valoraciones = valoracionService.findAll();
+            ctx.status(200).json(valoraciones);
         } catch (SQLException e) {
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(404).result("No se encontraron valoraciones: " + e.getMessage());
         }
     }
 
-    public void saveValoracion(Context ctx){
+    // POST: Crear una nueva valoración
+    public void saveValoracion(Context ctx) {
         try {
             Valoracion valoracion = ctx.bodyAsClass(Valoracion.class);
-            valoracionService.saveS(valoracion);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
+            int idGenerado = valoracionService.save(valoracion);
+            ctx.status(201).result("Valoración creada exitosamente con ID: " + idGenerado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result("Datos inválidos: " + e.getMessage());
         } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
+            ctx.status(500).result("Error al guardar la valoración: " + e.getMessage());
         }
     }
-    public void deleteValoracion(Context ctx){
+
+    // DELETE: Eliminar una valoración por ID
+    public void deleteValoracion(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
-            valoracionService.deleteS(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
+            valoracionService.delete(id);
+            ctx.status(200).result("Valoración eliminada correctamente");
+        } catch (NumberFormatException e) {
+            ctx.status(400).result("El ID debe ser un número válido");
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error al eliminar la valoración: " + e.getMessage());
         }
     }
 }

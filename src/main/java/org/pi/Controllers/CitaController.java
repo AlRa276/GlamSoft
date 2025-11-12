@@ -3,9 +3,11 @@ import io.javalin.http.Context;
 import org.pi.Models.Categoria;
 import org.pi.Models.Cita;
 import org.pi.Services.CitaService;
+import org.pi.dto.CitaDTO;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class CitaController {
     private final CitaService citaService;
@@ -16,29 +18,47 @@ public class CitaController {
 
     public void findALL(Context ctx){
         try {
-            List<Cita> citas = citaService.findAllCitas();
+            List<CitaDTO> citas = citaService.findAllCitas();
+            if (citas == null || citas.isEmpty()){
+                ctx.status(204).result("No se encontraron elementos");
+            }else {
             ctx.json(citas);
+            ctx.status(200);
+            }
         }catch (Exception e){
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(500).result("Error del sistema");
         }
     }
 
     public void findCita(Context ctx){
         try{
             int id = Integer.parseInt(ctx.pathParam("id"));
-            Cita cita= citaService.findCita(id);
+            CitaDTO cita= citaService.findCita(id);
+            if (cita == null){
+                ctx.status(204).result("No se encontro el elemento");
+            }else {
             ctx.json(cita);
+            ctx.status(200);
+            }
         }catch (SQLException e){
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error del sistema");
+        }catch (NumberFormatException en){
+            ctx.status(400).result("El id debe ser un numero entero");
         }
     }
 
     public void saveCita(Context ctx){
         try{
             Cita cita = ctx.bodyAsClass(Cita.class);
-            citaService.saveCita(cita);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
-        }catch (SQLException e){
+            if (cita != null && cita.getFechaCita() != null){
+                int idGenerado =   citaService.saveCita(cita);
+                ctx.status(201).json(Map.of(
+                        "success", true,
+                        "id_categoria", idGenerado
+                ));
+            }
+
+        }catch (Exception e){
             ctx.status(400).result("El recurso no se puede crear");
         }
     }
@@ -50,14 +70,20 @@ public class CitaController {
             ctx.status(204).result("Se elimino el recurso con exito");
         } catch (SQLException e) {
             ctx.status(404).result("No se encontro el elemento");
+        }catch (NumberFormatException en){
+            ctx.status(400).result("El id debe ser un numero entero");
         }
     }
 
     public void statusCita(Context ctx){
         try{
             Cita cita = ctx.bodyAsClass(Cita.class);
-            citaService.StatusCita(cita);
-            ctx.status(204).result("Se elimino el recurso con exito");
+            if (cita.getEstadoCita() == null || cita.getFechaCita() == null){
+                ctx.status(400).result("faltan datos necesarios para actualizar la cita");
+            }else {
+                citaService.StatusCita(cita);
+                ctx.status(204).result("Se actualizo el recurso con exito");
+            }
         } catch (SQLException e) {
             ctx.status(404).result("No se encontro el elemento");
         }
@@ -66,9 +92,13 @@ public class CitaController {
     public void fechaCita(Context ctx){
         try{
             Cita cita = ctx.bodyAsClass(Cita.class);
-            citaService.fechaCita(cita);
-            ctx.status(204).result("Se elimino el recurso con exito");
-        } catch (SQLException e) {
+            if (cita.getEstadoCita() == null || cita.getFechaCita() == null){
+                ctx.status(400).result("faltan datos necesarios para actualizar la cita");
+            }else {
+                citaService.fechaCita(cita);
+                ctx.status(204).result("Se actualizo el recurso con exito");
+            }
+        } catch (Exception e) {
             ctx.status(404).result("No se encontro el elemento");
         }
     }

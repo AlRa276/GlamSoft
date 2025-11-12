@@ -8,33 +8,16 @@ public class Comentario {
     private LocalDateTime fechaComentario;
     private int idCita;
     private int idCliente;
-    private Cita cita;
-    private Usuario cliente;
 
     public Comentario() {
     }
-    public Comentario(int idComentario, String comentario, LocalDateTime fechaComentario, int idCita, int idCliente, Cita cita, Usuario cliente) {
-        this.idComentario = idComentario;
-        this.comentario = comentario;
-        this.fechaComentario = fechaComentario;
-        this.idCita = idCita;
-        this.idCliente = idCliente;
-        this.cita = cita;
-        this.cliente = cliente;
-    }
+
     public Comentario(int idComentario, String comentario, LocalDateTime fechaComentario, int idCita, int idCliente) {
         this.idComentario = idComentario;
         this.comentario = comentario;
         this.fechaComentario = fechaComentario;
         this.idCita = idCita;
         this.idCliente = idCliente;
-    }
-    public Comentario(int idComentario, String comentario, LocalDateTime fechaComentario, Cita cita, Usuario cliente) {
-        this.idComentario = idComentario;
-        this.comentario = comentario;
-        this.fechaComentario = fechaComentario;
-        this.cita = cita;
-        this.cliente = cliente;
     }
 
     public int getIdComentario() {
@@ -75,21 +58,5 @@ public class Comentario {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
-    }
-
-    public Cita getCita() {
-        return cita;
-    }
-
-    public void setCita(Cita cita) {
-        this.cita = cita;
-    }
-
-    public Usuario getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Usuario cliente) {
-        this.cliente = cliente;
     }
 }

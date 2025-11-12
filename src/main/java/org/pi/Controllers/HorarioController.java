@@ -1,5 +1,7 @@
 package org.pi.Controllers;
 
+
+
 import io.javalin.http.Context;
 import org.pi.Models.Horario;
 import org.pi.Services.HorarioService;
@@ -8,48 +10,63 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class HorarioController {
+
     private final HorarioService horarioService;
 
     public HorarioController(HorarioService horarioService) {
         this.horarioService = horarioService;
     }
 
-    public void findALL(Context ctx){
-        try{
-            List<Horario> horarios = horarioService.findAllH();
-            ctx.json(horarios);
+    // 🔹 Listar todos los horarios
+    public void findAll(Context ctx) {
+        try {
+            List<Horario> horarios = horarioService.findAll();
+            ctx.status(200).json(horarios);
         } catch (SQLException e) {
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(500).result("Error al obtener los horarios: " + e.getMessage());
         }
     }
 
-    public void saveHorario(Context ctx){
+    // 🔹 Crear un nuevo horario
+    public void saveHorario(Context ctx) {
         try {
             Horario horario = ctx.bodyAsClass(Horario.class);
-            horarioService.saveH(horario);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
+            int idGenerado = horarioService.save(horario);
+            ctx.status(201).result("Horario creado con ID: " + idGenerado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result("Error de validación: " + e.getMessage());
         } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
+            ctx.status(500).result("Error en la base de datos: " + e.getMessage());
         }
     }
 
-    public void deleteHorario(Context ctx){
-        try{
+    // 🔹 Actualizar horario existente
+    public void updateHorario(Context ctx) {
+        try {
             int id = Integer.parseInt(ctx.pathParam("id"));
-            horarioService.deleteH(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
+            Horario horario = ctx.bodyAsClass(Horario.class);
+            horario.setIdHorario(id);
+            horarioService.update(horario);
+            ctx.status(200).result("Horario actualizado correctamente.");
+        } catch (NumberFormatException e) {
+            ctx.status(400).result("El ID debe ser un número válido.");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error en la base de datos: " + e.getMessage());
         }
     }
 
-    public void updateHorario(Context ctx){
-        try{
-            Horario horario = ctx.bodyAsClass(Horario.class);
-            horarioService.updateH(horario);
-            ctx.status(204).result("Se creo el elemento con exito");
+    // 🔹 Eliminar horario
+    public void deleteHorario(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            horarioService.delete(id);
+            ctx.status(200).result("Horario eliminado correctamente.");
+        } catch (NumberFormatException e) {
+            ctx.status(400).result("El ID debe ser un número válido.");
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error en la base de datos: " + e.getMessage());
         }
     }
 }

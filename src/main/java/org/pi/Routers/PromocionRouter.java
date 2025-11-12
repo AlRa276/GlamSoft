@@ -12,10 +12,12 @@ public class PromocionRouter {
 
     public void register(Javalin app){
         app.get("/promociones",promocionController::findAll);
-        app.get("/promociones/{id}",promocionController::findPromocion);
+        app.get("/promociones/{id}",promocionController::findById);
         app.post("/promociones",promocionController::savePromocion);
         app.delete("/promociones/{id}",promocionController::deletePromocion);
         app.patch("/promociones",promocionController::updatePromocion);
+        app.post("/promociones/{id}/servicios",promocionController::saveServicio);
+        app.get("/promociones/{id}/servicios",promocionController::getServicios);
     }
 
 }

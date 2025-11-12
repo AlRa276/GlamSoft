@@ -1,0 +1,96 @@
+package org.pi.Controllers;
+
+
+import io.javalin.http.Context;
+import org.pi.Models.Estilista;
+import org.pi.Models.Horario;
+import org.pi.Models.Servicio;
+import org.pi.Services.EstilistaService;
+import org.pi.dto.EstilistaDTO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public class EstilistaController {
+    private final EstilistaService estilistaService;
+
+    public EstilistaController(EstilistaService estilistaService) {
+        this.estilistaService = estilistaService;
+    }
+
+    // 🔹 GET: listar todos los estilistas con sus servicios y horarios
+    public void findAll(Context ctx) {
+        try {
+            List<EstilistaDTO> estilistas = estilistaService.findAllEstilistas();
+            ctx.status(200).json(estilistas);
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener los estilistas: " + e.getMessage());
+        }
+    }
+
+    // 🔹 GET: obtener un estilista por ID
+    public void findById(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            EstilistaDTO estilista = estilistaService.findEstilistaById(id);
+            ctx.status(200).json(estilista);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener el estilista: " + e.getMessage());
+        }
+    }
+
+    // 🔹 GET: obtener horarios de un estilista
+    public void findHorarios(Context ctx) {
+        try {
+            int idEstilista = Integer.parseInt(ctx.pathParam("id"));
+            List<Horario> horarios = estilistaService.findHorarios(idEstilista);
+            ctx.status(200).json(horarios);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener horarios: " + e.getMessage());
+        }
+    }
+
+    // 🔹 GET: obtener servicios de un estilista
+    public void findServicios(Context ctx) {
+        try {
+            int idEstilista = Integer.parseInt(ctx.pathParam("id"));
+            List<Servicio> servicios = estilistaService.findServicios(idEstilista);
+            ctx.status(200).json(servicios);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener servicios: " + e.getMessage());
+        }
+    }
+
+    // 🔹 POST: asignar horario a estilista
+    public void saveHorario(Context ctx) {
+        try {
+            Estilista estilista = ctx.bodyAsClass(Estilista.class);
+            estilistaService.saveHorario(estilista);
+            ctx.status(201).result("Horario asignado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al asignar horario: " + e.getMessage());
+        }
+    }
+
+    // 🔹 POST: asignar servicio a estilista
+    public void saveServicios(Context ctx) {
+        try {
+            Estilista estilista = ctx.bodyAsClass(Estilista.class);
+            estilistaService.saveServicio(estilista);
+            ctx.status(201).result("Servicio asignado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al asignar servicio: " + e.getMessage());
+        }
+    }
+}
+

@@ -8,7 +8,7 @@ import org.pi.Services.*;
 
 
 public class configModule {
-    public static CategoriaRouter initCategoriaRouter(){
+    public static CategoriaRouter initCategoriaRouter() {
         CategoriaRepository cr = new CategoriaRepository();
         CategoriaService cs = new CategoriaService(cr);
         CategoriaController cc = new CategoriaController(cs);
@@ -16,7 +16,7 @@ public class configModule {
         return rc;
     }
 
-    public static CitaRouter initCitaRouter(){
+    public static CitaRouter initCitaRouter() {
         CitaRepository cr = new CitaRepository();
         CitaService cs = new CitaService(cr);
         CitaController cc = new CitaController(cs);
@@ -24,13 +24,6 @@ public class configModule {
         return rc;
     }
 
-    public static CitaServicioRouter initCitaServicioRouter(){
-        CitaServicioRepository csr = new CitaServicioRepository();
-        CitaServicioServices css = new CitaServicioServices(csr);
-        CitaServicioController csc = new CitaServicioController(css);
-        CitaServicioRouter rcs = new CitaServicioRouter(csc);
-        return rcs;
-    }
 
     public static ComentarioRouter initComentarioRouter(){
         ComentarioRepository cr = new ComentarioRepository();
@@ -40,7 +33,7 @@ public class configModule {
         return rc;
     }
 
-    public static EmpleadoRouter intiEmpleadoRouter(){
+    public static EmpleadoRouter initEmpleadoRouter(){
         EmpleadoRepository er = new EmpleadoRepository();
         EmpleadoService es = new EmpleadoService(er);
         EmpleadoController ec = new EmpleadoController(es);
@@ -48,23 +41,15 @@ public class configModule {
         return re;
     }
 
-    public static EstilistaHorarioRouter initEstilistaHorarioRouter(){
-        EstilistaHorarioRepository ehr = new EstilistaHorarioRepository();
-        EstilistaHorarioService ehs = new EstilistaHorarioService(ehr);
-        EstilistaHorarioController ehc = new EstilistaHorarioController(ehs);
-        EstilistaHorarioRouter rhs = new EstilistaHorarioRouter(ehc);
-        return rhs;
+    public static EstilistaRouter initEstilistaRouter(){
+        EstilistaRepository er = new EstilistaRepository();
+        EstilistaService es = new EstilistaService(er);
+        EstilistaController ec = new EstilistaController(es);
+        EstilistaRouter re = new EstilistaRouter(ec);
+        return re;
     }
 
-    public static EstilistaServicioRouter initEstilistaServicioRouter(){
-        EstilistaServicioRepository esr = new EstilistaServicioRepository();
-        EstilistaServicioService ess = new EstilistaServicioService(esr);
-        EstilistaServicioController esc = new EstilistaServicioController(ess);
-        EstilistaServicioRouter rse = new EstilistaServicioRouter(esc);
-        return rse;
-    }
-
-    public static FormularioRouter initFormularioRepository(){
+    public static FormularioRouter initFormularioRouter(){
         FormularioRepository fr = new FormularioRepository();
         FormularioService fs = new FormularioService(fr);
         FormularioController fc = new FormularioController(fs);
@@ -112,13 +97,6 @@ public class configModule {
         return rou;
     }
 
-    public static ServicioPromocionRouter initServicioPromocionRouter(){
-        ServicioPromocionRepository spr = new ServicioPromocionRepository();
-        ServicioPromocionService sps = new ServicioPromocionService(spr);
-        ServicioPromocionController spc = new ServicioPromocionController(sps);
-        ServicioPromocionRouter rps = new ServicioPromocionRouter(spc);
-        return rps;
-    }
 
     public static ServicioRouter initServicioRouter(){
         ServicioRepository sr = new ServicioRepository();

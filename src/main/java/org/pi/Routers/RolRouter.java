@@ -11,8 +11,8 @@ public class RolRouter {
     }
 
     public void register(Javalin app){
-        app.get("/roles",rolController::findAllRol);
-        app.get("/roles/{id}",rolController::findRol);
+        app.get("/roles",rolController::findAll);
+        app.get("/roles/{id}",rolController::findById);
         app.post("/roles",rolController::saveRol);
         app.delete("/roles/{id}",rolController::deleteRol);
         app.patch("/roles",rolController::updateRol);

@@ -7,17 +7,15 @@ public class Main {
 
         configModule.initCategoriaRouter().register(app);
         configModule.initCitaRouter().register(app);
-        configModule.initCitaServicioRouter().register(app);
-        configModule.intiEmpleadoRouter().register(app);
-        configModule.initEstilistaHorarioRouter().register(app);
-        configModule.initEstilistaServicioRouter().register(app);
-        configModule.initFormularioRepository().register(app);
+        configModule.initComentarioRouter().register(app);
+        configModule.initEmpleadoRouter().register(app);
+        configModule.initEstilistaRouter().register(app);
+        configModule.initFormularioRouter().register(app);
         configModule.initHorarioRouter().register(app);
         configModule.initPortafolioRouter().register(app);
         configModule.initPreguntaRouter().register(app);
         configModule.initPromocionRouter().register(app);
         configModule.initRolRouter().register(app);
-        configModule.initServicioPromocionRouter().register(app);
         configModule.initServicioRouter().register(app);
         configModule.initValoracionRouter().register(app);
     }

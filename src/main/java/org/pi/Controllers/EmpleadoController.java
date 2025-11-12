@@ -14,43 +14,68 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
-    public void findALL(Context ctx){
-        try{
-            int id = Integer.parseInt(ctx.pathParam("id"));
-            List<Empleado> empleados = empleadoService.findAllE(id);
-            ctx.json(empleados);
+    // 🔹 GET: listar empleados por rol
+    public void findAll(Context ctx) {
+        try {
+            int idRol = Integer.parseInt(ctx.pathParam("idRol"));
+            List<Empleado> empleados = empleadoService.findAll(idRol);
+            ctx.status(200).json(empleados);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("Elementos no encontrados");
+            ctx.status(500).result("Error al obtener empleados: " + e.getMessage());
         }
     }
 
-    public void findEmpleado(Context ctx){
-        try{
+    // 🔹 GET: buscar empleado por id
+    public void findById(Context ctx) {
+        try {
             int id = Integer.parseInt(ctx.pathParam("id"));
-            Empleado empleado = empleadoService.findE(id);
-            ctx.json(empleado);
+            Empleado empleado = empleadoService.findById(id);
+            ctx.status(200).json(empleado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error al obtener el empleado: " + e.getMessage());
         }
     }
 
-    public void saveEmpleado(Context ctx){
-        try{
+    // 🔹 POST: guardar empleado
+    public void save(Context ctx) {
+        try {
             Empleado empleado = ctx.bodyAsClass(Empleado.class);
-            empleadoService.saveE(empleado);
-            ctx.status(201).result("Se ha creado un nuevo recurso con exito");
+            int idGenerado = empleadoService.save(empleado);
+            ctx.status(201).result("Empleado creado con ID: " + idGenerado);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
+            ctx.status(500).result("Error al guardar el empleado: " + e.getMessage());
         }
     }
 
-    public void deleteEmpleado(Context ctx){
-        try{
-            int id = Integer.parseInt(ctx.pathParam("id"));
-            empleadoService.deleteE(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
+    // 🔹 PUT: actualizar empleado
+    public void update(Context ctx) {
+        try {
+            Empleado empleado = ctx.bodyAsClass(Empleado.class);
+            empleadoService.update(empleado);
+            ctx.status(200).result("Empleado actualizado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error al actualizar el empleado: " + e.getMessage());
+        }
+    }
+
+    // 🔹 DELETE: eliminar empleado
+    public void delete(Context ctx) {
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            empleadoService.delete(id);
+            ctx.status(200).result("Empleado eliminado correctamente");
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al eliminar el empleado: " + e.getMessage());
         }
     }
 }

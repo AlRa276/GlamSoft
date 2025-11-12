@@ -5,24 +5,24 @@ public class Usuario {
     private String email;
     private String password;
     private int idRol;
-    private Rol rol;
 
     public Usuario() {
     }
+
+    public Usuario(String email) {
+        this.email = email;
+    }
+
+    public Usuario(String email, String password) {
+
+        this.email = email;
+        this.password = password;
+    }
+
     public Usuario(int idRol, String email) {
         this.idRol = idRol;
         this.email = email;
-
     }
-
-    public Usuario(int idUsuario, String email, String password, int idRol, Rol rol) {
-        this.idUsuario = idUsuario;
-        this.email = email;
-        this.password = password;
-        this.idRol = idRol;
-        this.rol = rol;
-    }
-
 
     public Usuario(int idUsuario, String email, String password, int idRol) {
         this.idUsuario = idUsuario;
@@ -30,14 +30,8 @@ public class Usuario {
         this.password = password;
         this.idRol = idRol;
     }
-    public Usuario(String email){
-        this.email = email;
-    }
-    public Usuario(String email, String password){
-        this.email = email;
-        this.password = password;
-    }
-    public int getIdUsuario(int anInt) {
+
+    public int getIdUsuario() {
         return idUsuario;
     }
 
@@ -54,7 +48,6 @@ public class Usuario {
     }
 
     public String getPassword() {
-
         return password;
     }
 
@@ -68,18 +61,6 @@ public class Usuario {
 
     public void setIdRol(int idRol) {
         this.idRol = idRol;
-    }
-
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 }
 

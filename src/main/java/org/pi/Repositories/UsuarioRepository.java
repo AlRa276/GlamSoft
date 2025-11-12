@@ -61,7 +61,7 @@ public class UsuarioRepository {
         return usuario;
     }
 
-    public void saveUser(Usuario usuario) throws SQLException {
+    public int saveUser(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO usuario(email, password, id_rol) VALUES(?,?,?)";
         try (
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
@@ -76,11 +76,13 @@ public class UsuarioRepository {
                 throw new SQLException("No se pudo insertar el registro");
             }
             //obtener las claves
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                usuario.setIdUsuario(generatedKeys.getInt(1));
-            } else {
-                throw new SQLException("No se pudo obtener el id generado");
+            try(ResultSet claves = stmt.getGeneratedKeys()){
+                if(claves.next()){
+                    int id = claves.getInt(1);
+                    return id;
+                } else {
+                    throw new SQLException("No se encontro id");
+                }
             }
         }
     }

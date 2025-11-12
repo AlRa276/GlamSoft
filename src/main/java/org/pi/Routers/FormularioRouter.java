@@ -12,7 +12,8 @@ public class FormularioRouter {
 
     public void register(Javalin app){
         app.get("/formularios",formularioController::findAll);
-        app.post("/formularios",formularioController::saveFormulario);
+        app.get("/formularios/{id}",formularioController::findById);
+        app.post("/formularios",formularioController::save);
         app.delete("/formularios/{id}",formularioController::deleteFormulario);
         app.patch("/formularios",formularioController::updateFormulario);
     }

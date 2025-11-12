@@ -10,8 +10,8 @@ public class PreguntaRouter {
         this.preguntaController = preguntaController;
     }
      public void register(Javalin app){
-        app.get("/preguntas",preguntaController::findALL);
-        app.get("/preguntas/{id}",preguntaController::findPregunta);
+        app.get("/preguntas",preguntaController::findAll);
+        app.get("/preguntas/{id}",preguntaController::findById);
         app.post("/preguntas",preguntaController::savePregunta);
         app.delete("/preguntas/{id}",preguntaController::deletePregunta);
         app.patch("/preguntas",preguntaController::updatePregunta);
