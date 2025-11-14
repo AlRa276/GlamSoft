@@ -15,6 +15,24 @@ public class ComentarioController {
         this.comentarioService = comentarioService;
     }
 
+    public void HistorialComen(Context ctx){
+        try{
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            List<Comentario> comentarios = comentarioService.HistorialComen(id);
+            ctx.status(200).json(comentarios);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void find8comen(Context ctx){
+        try{
+            List<Comentario> comentarios = comentarioService.find8Comen();
+            ctx.status(200).json(comentarios);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void findALL(Context ctx){
         try{
             List<Comentario> comentarios = comentarioService.findAllC();
@@ -30,22 +48,6 @@ public class ComentarioController {
         }
     }
 
-    public void findComentario(Context ctx){
-        try{
-            int id = Integer.parseInt(ctx.pathParam("idRol"));
-            Comentario comentario = comentarioService.findC(id);
-            if (comentario == null){
-                ctx.status(204).result("No se encontro el elemento");
-            }else {
-                ctx.json(comentario);
-                ctx.status(200);
-            }
-        } catch (SQLException e) {
-            ctx.status(500).result("Error del sistema");
-        } catch (NumberFormatException e) {
-            ctx.status(400).result("El id debe ser un numero entero");
-        }
-    }
 
     public void saveComentario(Context ctx) {
         try {
@@ -76,13 +78,5 @@ public class ComentarioController {
         }
     }
 
-    public  void updateComentario(Context ctx){
-        try{
-            Comentario comentario = ctx.bodyAsClass(Comentario.class);
-            comentarioService.updateC(comentario);
-            ctx.status(204).result("Se creo el elemento con exito");
-        } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
-        }
-    }
+
 }

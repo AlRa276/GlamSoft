@@ -15,12 +15,10 @@ public class PortafolioService {
         this.portafolioRepository = portafolioRepository;
     }
 
-    // 🔹 Obtener todos los portafolios
     public List<Portafolio> findAll() throws SQLException {
         return portafolioRepository.findAll();
     }
 
-    // 🔹 Guardar un nuevo portafolio (imagen)
     public int save(Portafolio portafolio) throws SQLException {
         // Validaciones básicas
         if (portafolio.getImageURL() == null || portafolio.getImageURL().isBlank()) {
@@ -33,15 +31,13 @@ public class PortafolioService {
         return portafolioRepository.save(portafolio);
     }
 
-    // 🔹 Eliminar una imagen del portafolio
     public void delete(int idImagen) throws SQLException {
         if (idImagen <= 0) {
             throw new IllegalArgumentException("El ID de la imagen debe ser mayor a cero.");
         }
         portafolioRepository.delete(idImagen);
     }
-
-    // 🔹 Actualizar nombre de imagen
+    
     public void update(Portafolio portafolio) throws SQLException {
         if (portafolio.getIdImagen() <= 0) {
             throw new IllegalArgumentException("El ID de la imagen es inválido.");

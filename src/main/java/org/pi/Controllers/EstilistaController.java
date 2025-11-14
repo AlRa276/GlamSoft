@@ -18,7 +18,15 @@ public class EstilistaController {
         this.estilistaService = estilistaService;
     }
 
-    // 🔹 GET: listar todos los estilistas con sus servicios y horarios
+    public void fidnEstilistaServicio(Context ctx){
+        try{
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            List<Estilista> estilistas = estilistaService.findEstilistaServicio(id);
+            ctx.status(200).json(estilistas);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void findAll(Context ctx) {
         try {
             List<EstilistaDTO> estilistas = estilistaService.findAllEstilistas();
@@ -28,7 +36,7 @@ public class EstilistaController {
         }
     }
 
-    // 🔹 GET: obtener un estilista por ID
+
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -41,7 +49,6 @@ public class EstilistaController {
         }
     }
 
-    // 🔹 GET: obtener horarios de un estilista
     public void findHorarios(Context ctx) {
         try {
             int idEstilista = Integer.parseInt(ctx.pathParam("id"));
@@ -54,7 +61,6 @@ public class EstilistaController {
         }
     }
 
-    // 🔹 GET: obtener servicios de un estilista
     public void findServicios(Context ctx) {
         try {
             int idEstilista = Integer.parseInt(ctx.pathParam("id"));
@@ -67,7 +73,7 @@ public class EstilistaController {
         }
     }
 
-    // 🔹 POST: asignar horario a estilista
+
     public void saveHorario(Context ctx) {
         try {
             Estilista estilista = ctx.bodyAsClass(Estilista.class);
@@ -80,7 +86,7 @@ public class EstilistaController {
         }
     }
 
-    // 🔹 POST: asignar servicio a estilista
+
     public void saveServicios(Context ctx) {
         try {
             Estilista estilista = ctx.bodyAsClass(Estilista.class);

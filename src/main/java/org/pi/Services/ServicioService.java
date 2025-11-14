@@ -13,12 +13,21 @@ public class ServicioService {
         this.servicioRepository = servicioRepository;
     }
 
-    // 🔹 Listar todos los servicios
+
     public List<Servicio> findAllServicios() throws SQLException {
         return servicioRepository.findAll();
     }
 
-    // 🔹 Buscar un servicio por ID
+    public List<Servicio> findByCategoria(int id)throws SQLException{
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a cero");
+        }
+        return servicioRepository.findByCategoria(id);
+    }
+
+    public List<Servicio> findNombresServicios() throws SQLException{
+        return servicioRepository.findNombresServicios();
+    }
     public Servicio findServicio(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID del servicio debe ser mayor a cero");
@@ -32,13 +41,11 @@ public class ServicioService {
         return servicio;
     }
 
-    // 🔹 Guardar nuevo servicio
     public int saveServicio(Servicio servicio) throws SQLException {
         validarServicio(servicio);
         return servicioRepository.save(servicio);
     }
 
-    // 🔹 Actualizar servicio existente
     public void updateServicio(int id, Servicio servicio) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero");
@@ -51,7 +58,6 @@ public class ServicioService {
         servicioRepository.update(servicio);
     }
 
-    // 🔹 Eliminar servicio
     public void deleteServicio(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero");
@@ -60,7 +66,7 @@ public class ServicioService {
         servicioRepository.delete(id);
     }
 
-    // 🔹 Validaciones comunes
+    //Validaciones comunes
     private void validarServicio(Servicio servicio) {
         if (servicio.getNombreServicio() == null || servicio.getNombreServicio().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del servicio no puede estar vacío");

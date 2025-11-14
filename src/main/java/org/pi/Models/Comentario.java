@@ -8,8 +8,19 @@ public class Comentario {
     private LocalDateTime fechaComentario;
     private int idCita;
     private int idCliente;
+    private String emailCliente;
+
 
     public Comentario() {
+    }
+
+    public Comentario(int idComentario, String comentario, LocalDateTime fechaComentario, int idCita, int idCliente, String emailCliente) {
+        this.idComentario = idComentario;
+        this.comentario = comentario;
+        this.fechaComentario = fechaComentario;
+        this.idCita = idCita;
+        this.idCliente = idCliente;
+        this.emailCliente = emailCliente;
     }
 
     public Comentario(int idComentario, String comentario, LocalDateTime fechaComentario, int idCita, int idCliente) {
@@ -18,6 +29,14 @@ public class Comentario {
         this.fechaComentario = fechaComentario;
         this.idCita = idCita;
         this.idCliente = idCliente;
+    }
+
+    public String getEmailCliente() {
+        return emailCliente;
+    }
+
+    public void setEmailCliente(String emailCliente) {
+        this.emailCliente = emailCliente;
     }
 
     public int getIdComentario() {

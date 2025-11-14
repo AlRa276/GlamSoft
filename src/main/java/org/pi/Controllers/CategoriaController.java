@@ -85,24 +85,5 @@ public class CategoriaController {
             ctx.status(404).result("No se encontro el elemento");
         }
     }
-    public void updateCategoria(Context ctx){
-        try{
-            Categoria categoria = ctx.bodyAsClass(Categoria.class);
-            String nombre = categoria.getNombreCategoria();
-            if (nombre == null || nombre.trim().isEmpty()){
-                ctx.status(400).result("El nombre de la categoria no puede estar vacio");
-                return;
-            }
-            categoriaService.updateCategoria(categoria);
-            ctx.status(200);
-        } catch (SQLException e){
-            ctx.status(500).result("Error del sistema");
-        }catch (NumberFormatException e){
-            ctx.status(400).result("El id debe ser un numero entero");
-        }catch (IllegalArgumentException e){
-            ctx.status(400).result("id invalido: " + e.getMessage());
-        }catch (NoSuchElementException e){
-            ctx.status(404).result("No se encontro el elemento");
-        }
-    }
+
   }

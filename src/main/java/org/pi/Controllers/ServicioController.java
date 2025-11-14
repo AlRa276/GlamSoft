@@ -15,7 +15,6 @@ public class ServicioController {
         this.servicioService = servicioService;
     }
 
-    // 🔹 Obtener todos los servicios
     public void findAll(Context ctx) {
         try {
             List<Servicio> servicios = servicioService.findAllServicios();
@@ -25,7 +24,25 @@ public class ServicioController {
         }
     }
 
-    // 🔹 Obtener un servicio por ID
+    public void findNombresServicios(Context ctx){
+        try{
+            List<Servicio> servicios = servicioService.findNombresServicios();
+            ctx.status(200).json(servicios);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void findByCategoria(Context ctx){
+        try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            List<Servicio> servicios = servicioService.findByCategoria(id);
+            ctx.status(200).json(servicios);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -38,7 +55,6 @@ public class ServicioController {
         }
     }
 
-    // 🔹 Crear un nuevo servicio
     public void saveServicio(Context ctx) {
         try {
             Servicio servicio = ctx.bodyAsClass(Servicio.class);
@@ -51,7 +67,6 @@ public class ServicioController {
         }
     }
 
-    // 🔹 Actualizar servicio existente
     public void updateServicio(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -65,7 +80,6 @@ public class ServicioController {
         }
     }
 
-    // 🔹 Eliminar servicio
     public void deleteServicio(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

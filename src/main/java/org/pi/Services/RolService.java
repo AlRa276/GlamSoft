@@ -13,7 +13,7 @@ public class RolService {
         this.rolRepository = rolRepository;
     }
 
-    // Obtener todos los roles
+
     public List<Rol> findAllRol() throws SQLException {
         List<Rol> roles = rolRepository.findAllRol();
         if (roles.isEmpty()) {
@@ -22,7 +22,6 @@ public class RolService {
         return roles;
     }
 
-    // Buscar un rol por su ID
     public Rol findRol(int idRol) throws SQLException {
         if (idRol <= 0) {
             throw new IllegalArgumentException("El ID del rol debe ser mayor a cero");
@@ -34,7 +33,7 @@ public class RolService {
         return rol;
     }
 
-    // Guardar un nuevo rol
+
     public void saveRol(Rol rol) throws SQLException {
         if (rol == null) {
             throw new IllegalArgumentException("El objeto rol no puede ser nulo");
@@ -45,7 +44,6 @@ public class RolService {
         rolRepository.saveRol(rol);
     }
 
-    // Actualizar un rol existente
     public void updateRol(Rol rol) throws SQLException {
         if (rol == null || rol.getIdRol() <= 0) {
             throw new IllegalArgumentException("El rol o su ID no son válidos");
@@ -56,7 +54,6 @@ public class RolService {
         rolRepository.updateRol(rol);
     }
 
-    // Eliminar un rol
     public void deleteRol(int idRol) throws SQLException {
         if (idRol <= 0) {
             throw new IllegalArgumentException("El ID del rol debe ser válido");

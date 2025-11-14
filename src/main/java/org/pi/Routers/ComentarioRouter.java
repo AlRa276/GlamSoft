@@ -12,9 +12,9 @@ public class ComentarioRouter {
 
     public void register(Javalin app){
         app.get("/comentarios",comentarioController::findALL);
-        app.get("/comentarios/{id}",comentarioController::findComentario);
         app.post("/comentarios",comentarioController::saveComentario);
         app.delete("/comentarios/{id}",comentarioController::deleteComentario);
-        app.patch("/comentarios",comentarioController::updateComentario);
+        app.get("/comentarios/clientes/{id}",comentarioController::HistorialComen);
+        app.get("/comentarios/fecha",comentarioController::find8comen);//muestra los ultimos 8 comentarios
     }
 }

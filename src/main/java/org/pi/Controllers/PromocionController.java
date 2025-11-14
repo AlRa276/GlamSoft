@@ -14,7 +14,7 @@ public class PromocionController {
         this.promocionService = promocionService;
     }
 
-    // 🔹 GET: listar todas las promociones
+
     public void findAll(Context ctx) {
         try {
             List<Promocion> promociones = promocionService.findAll();
@@ -24,7 +24,7 @@ public class PromocionController {
         }
     }
 
-    // 🔹 GET: obtener una promoción por ID
+
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -37,7 +37,7 @@ public class PromocionController {
         }
     }
 
-    // 🔹 POST: crear una nueva promoción
+
     public void savePromocion(Context ctx) {
         try {
             Promocion promocion = ctx.bodyAsClass(Promocion.class);
@@ -50,7 +50,7 @@ public class PromocionController {
         }
     }
 
-    // 🔹 PUT: actualizar promoción existente
+
     public void updatePromocion(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -65,7 +65,6 @@ public class PromocionController {
         }
     }
 
-    // 🔹 DELETE: eliminar promoción
     public void deletePromocion(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -78,7 +77,7 @@ public class PromocionController {
         }
     }
 
-    // 🔹 GET: obtener servicios de una promoción
+
     public void getServicios(Context ctx) {
         try {
             int idPromocion = Integer.parseInt(ctx.pathParam("id"));
@@ -91,7 +90,7 @@ public class PromocionController {
         }
     }
 
-    // 🔹 POST: asignar servicio a promoción
+
     public void saveServicio(Context ctx) {
         try {
             Promocion relacion = ctx.bodyAsClass(Promocion.class);

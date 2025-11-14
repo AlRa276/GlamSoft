@@ -17,7 +17,7 @@ public class HorarioController {
         this.horarioService = horarioService;
     }
 
-    // 🔹 Listar todos los horarios
+
     public void findAll(Context ctx) {
         try {
             List<Horario> horarios = horarioService.findAll();
@@ -27,7 +27,7 @@ public class HorarioController {
         }
     }
 
-    // 🔹 Crear un nuevo horario
+
     public void saveHorario(Context ctx) {
         try {
             Horario horario = ctx.bodyAsClass(Horario.class);
@@ -40,7 +40,7 @@ public class HorarioController {
         }
     }
 
-    // 🔹 Actualizar horario existente
+
     public void updateHorario(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -57,7 +57,7 @@ public class HorarioController {
         }
     }
 
-    // 🔹 Eliminar horario
+
     public void deleteHorario(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

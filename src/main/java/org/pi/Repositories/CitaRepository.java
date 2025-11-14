@@ -3,6 +3,7 @@ import org.pi.Config.DBconfig;
 import org.pi.Models.Cita;
 import org.pi.dto.CitaDTO;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,124 @@ import java.util.stream.Collectors;
 
 public class CitaRepository {
 
+    public List<CitaDTO> findCitaCliente(int idCliente) throws SQLException{
+        List<CitaDTO> citas = new ArrayList<>();
+        String sql = "SELECT c.estado_cita, c.fecha_hora_cita, c.fecha_solicitud, GROUP_CONCAT(s.nombre_servicio SEPARATOR ', ' " +
+                "AS nombres_servicios, SUM(s.precio) AS total_cita " +
+                "FROM cita c JOIN usuario u ON c.id_cliente = u.id_usuario " +
+                "JOIN cita_servicio ON c.id_cita = cs.id_cita " +
+                "JOIN servicio s ON cs.id_servicio = s.id_servicio " +
+                "WHERE c.id_cliente = ? " +
+                "GROUP BY c.estado_cita, c.fecha_hora_cita, c.fecha_solicitud " +
+                "ORDEN BY c.fecha_hora_cita";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ){
+            stmt.setInt(1, idCliente);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                CitaDTO dto = new CitaDTO();
+                dto.setEstadoCita(rs.getString("estado_cita"));
+                Timestamp fecha2 = rs.getTimestamp("fecha_hora_cita");
+                dto.setFechaCita(fecha2.toLocalDateTime());
+                Timestamp solicitud = rs.getTimestamp("fecha_solicitud");
+                dto.setFechaSolicitudCita(solicitud.toLocalDateTime());
+                dto.setNombresServicios(rs.getString("nombres_servicios"));
+                dto.setPrecioTotal(rs.getDouble("total_cita"));
+                citas.add(dto);
+            }
+        }
+        return citas;
+    }
+    public  List<CitaDTO> findCitasMes(int mes, int year) throws SQLException{
+        List<CitaDTO> citas = new ArrayList<>();
+        String sql = "SELECT c.fecha_hora_cita, u.email AS cliente_email, GROUP_CONCAT(s.nombre_servicio SEPARATOR ', ') " +
+                "AS nombres_servicios " +
+                "FROM cita c JOIN usuario ON c.id_cliente = u.id_usuario " +
+                "JOIN cita_servicio cs ON c.id_cita = cs.id_cita " +
+                "JOIN servicio s ON cs.id_servicio = s.id_servicio " +
+                "WHERE MONTH(c.fecha_hora_cita) = ? " +
+                "AND YEAR(c.fecha_hora_cita) = ? " +
+                "GROUP BY c.fecha_hora_cita, u.email " +
+                "ORDEN BY c.fecha_hora_cita";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ){
+            stmt.setInt(1, mes);
+            stmt.setInt(2, year);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                CitaDTO dto = new CitaDTO();
+                Timestamp fecha2 = rs.getTimestamp("fecha_hora_cita");
+                dto.setFechaCita(fecha2.toLocalDateTime());
+                dto.setClienteEmail(rs.getString("cliente_email"));
+                dto.setNombresServicios(rs.getString("nombres_servicios"));
+                citas.add(dto);
+            }
+        }
+        return citas;
+    }
+
+    public List<CitaDTO> findCitasSemana(int year, int semana) throws SQLException{
+        List<CitaDTO> citas = new ArrayList<>();
+        String sql = "SELECT c.fecha_hora_cita, u.email AS cliente_email, GROUP_CONCAT(s.nombre_servicio SEPARATOR ', ') " +
+                "AS nombres_servicios " +
+                "FROM cita c JOIN usuario ON c.id_cliente = u.id_usuario " +
+                "JOIN cita_servicio cs ON c.id_cita = cs.id_cita " +
+                "JOIN servicio s ON cs.id_servicio = s.id_servicio " +
+                "WHERE YEARWEEK(c.fecha_hora_cita, 1) = YEARWEEK(STR_TO_DATE(CONCAT(?,'-','01'), '%X-%V-%w'), 1) " +
+                "GROUP BY c.fecha_hora_cita, u.email " +
+                "ORDER BY c.fecha_hora_cita;";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ){
+            stmt.setInt(1, year);
+            stmt.setInt(2, semana);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                CitaDTO dto = new CitaDTO();
+                Timestamp fecha2 = rs.getTimestamp("fecha_hora_cita");
+                dto.setFechaCita(fecha2.toLocalDateTime());
+                dto.setClienteEmail(rs.getString("cliente_email"));
+                dto.setNombresServicios(rs.getString("nombres_servicios"));
+                citas.add(dto);
+            }
+        }
+        return citas;
+    }
+
+    public List<CitaDTO> findCitasDia(LocalDate fecha) throws SQLException{
+        List<CitaDTO> citas = new ArrayList<>();
+        String sql = "SELECT c.fecha_hora_cita, u.email AS cliente_email, GROUP_CONCAT(s.nombre_servicio SEPARATOR ', ') " +
+                "AS nombres_servicios " +
+                "FROM cita c JOIN usuario ON c.id_cliente = u.id_usuario " +
+                "JOIN cita_servicio cs ON c.id_cita = cs.id_cita " +
+                "JOIN servicio s ON cs.id_servicio = s.id_servicio " +
+                "WHERE DATE(c.fecha_hora_cita) = ? " +
+                "GROUP BY c.id_cita, u.email, e.nombre, c.estado_cita, c.fecha_hora_cita, c.fecha_solicitud " +
+                "ORDER BY c.fecha_hora_cita;";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ){
+            stmt.setDate(1, java.sql.Date.valueOf(fecha));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                CitaDTO dto = new CitaDTO();
+                Timestamp fecha2 = rs.getTimestamp("fecha_hora_cita");
+                dto.setFechaCita(fecha2.toLocalDateTime());
+                dto.setClienteEmail(rs.getString("cliente_email"));
+                dto.setNombresServicios(rs.getString("nombres_servicios"));
+                citas.add(dto);
+            }
+        }
+        return citas;
+    }
+    //todas las citas
     public List<CitaDTO> findAllCitas() throws SQLException {
         List<CitaDTO> citas = new ArrayList<>();
 
@@ -55,7 +174,7 @@ public class CitaRepository {
         }
         return citas;
     }
-
+    //una cita en especifico
     public CitaDTO findCitaById(int id) throws SQLException {
         CitaDTO cita = null;
 

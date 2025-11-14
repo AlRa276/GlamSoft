@@ -13,17 +13,17 @@ public class TokenManager {
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public String issueToken(String email){
-        return Jwts.builder().setSubject(email).setIssuedAt(new Date()).
+    public String issueToken(String idUser){
+        return Jwts.builder().setSubject(idUser).setIssuedAt(new Date()).
                 setExpiration(new Date(System.currentTimeMillis()+EXPIRATION_TIME)).
                 signWith(key).compact();
     }
 
-    public boolean validarToken(String token, String email){
+    public boolean validarToken(String token, String idUser){
         try{
             Claims claims = Jwts.parserBuilder().setSigningKey(this.key).build().
                     parseClaimsJws(token).getBody();
-            return claims.getSubject().equals(email);
+            return claims.getSubject().equals(idUser);
         }catch (JwtException | IllegalArgumentException e){
             return false;
         }

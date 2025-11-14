@@ -14,7 +14,7 @@ public class ValoracionController {
         this.valoracionService = valoracionService;
     }
 
-    // GET: Obtener todas las valoraciones
+
     public void findAll(Context ctx) {
         try {
             List<Valoracion> valoraciones = valoracionService.findAll();
@@ -24,7 +24,7 @@ public class ValoracionController {
         }
     }
 
-    // POST: Crear una nueva valoración
+
     public void saveValoracion(Context ctx) {
         try {
             Valoracion valoracion = ctx.bodyAsClass(Valoracion.class);
@@ -37,7 +37,6 @@ public class ValoracionController {
         }
     }
 
-    // DELETE: Eliminar una valoración por ID
     public void deleteValoracion(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

@@ -12,6 +12,8 @@ public class ServicioRouter {
 
     public void register(Javalin app){
         app.get("/servicios",servicioController::findAll);
+        app.get("/servicios/categorias/{id}",servicioController::findByCategoria);
+        app.get("/servicios/nombres",servicioController::findNombresServicios);
         app.get("/servicios/{id}",servicioController::findById);
         app.post("/servicios",servicioController::saveServicio);
         app.delete("/servicios/{id}",servicioController::deleteServicio);

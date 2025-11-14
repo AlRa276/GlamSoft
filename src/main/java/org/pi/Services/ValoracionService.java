@@ -13,7 +13,6 @@ public class ValoracionService {
         this.valoracionRepository = valoracionRepository;
     }
 
-    // Obtener todas las valoraciones
     public List<Valoracion> findAll() throws SQLException {
         List<Valoracion> valoraciones = valoracionRepository.findAll();
         if (valoraciones.isEmpty()) {
@@ -22,7 +21,6 @@ public class ValoracionService {
         return valoraciones;
     }
 
-    // Guardar una nueva valoracion
     public int save(Valoracion valoracion) throws SQLException {
         if (valoracion == null) {
             throw new IllegalArgumentException("La valoración no puede ser nula");
@@ -39,7 +37,6 @@ public class ValoracionService {
         return valoracionRepository.save(valoracion);
     }
 
-    // Eliminar una valoración
     public void delete(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID de la valoración debe ser válido");

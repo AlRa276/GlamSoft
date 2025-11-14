@@ -14,7 +14,7 @@ public class RolController {
         this.rolService = rolService;
     }
 
-    // GET: Obtener todos los roles
+
     public void findAll(Context ctx) {
         try {
             List<Rol> roles = rolService.findAllRol();
@@ -24,7 +24,7 @@ public class RolController {
         }
     }
 
-    // GET: Obtener un rol por ID
+
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -37,7 +37,7 @@ public class RolController {
         }
     }
 
-    // POST: Crear un nuevo rol
+
     public void saveRol(Context ctx) {
         try {
             Rol rol = ctx.bodyAsClass(Rol.class);
@@ -50,7 +50,7 @@ public class RolController {
         }
     }
 
-    // PUT: Actualizar un rol existente
+
     public void updateRol(Context ctx) {
         try {
             Rol rol = ctx.bodyAsClass(Rol.class);
@@ -63,7 +63,7 @@ public class RolController {
         }
     }
 
-    // DELETE: Eliminar un rol por ID
+
     public void deleteRol(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

@@ -6,6 +6,7 @@ import org.pi.Services.CitaService;
 import org.pi.dto.CitaDTO;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,46 @@ public class CitaController {
 
     public CitaController(CitaService citaService) {
         this.citaService = citaService;
+    }
+
+    public void getCitasPorMes(Context ctx) {
+        try{
+            int mes = Integer.parseInt(ctx.queryParam("mes"));
+            int año = Integer.parseInt(ctx.queryParam("anio"));
+
+            ctx.json(citaService.citasPorMes(mes, año));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getHistorialCliente(Context ctx) {
+        try{
+            int idCliente = Integer.parseInt(ctx.queryParam("idCliente"));
+
+            ctx.json(citaService.historialClienteCitas(idCliente));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void getCitasPorSemana(Context ctx) {
+        try{
+            int año = Integer.parseInt(ctx.queryParam("anio"));
+            int semana = Integer.parseInt(ctx.queryParam("semana"));
+
+            ctx.json(citaService.citasPorSemana(año, semana));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getCitasPorDia(Context ctx) {
+        try{
+            LocalDate fecha = LocalDate.parse(ctx.queryParam("fecha"));
+            ctx.json(citaService.citasPorDia(fecha));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void findALL(Context ctx){

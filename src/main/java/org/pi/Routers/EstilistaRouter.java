@@ -16,6 +16,7 @@ public class EstilistaRouter {
         app.get("/estilistas/{id}/servicios",estilistaController::findServicios);
         app.post("/estilistas/horarios",estilistaController::saveHorario);
         app.post("/estilistas/servicios",estilistaController::saveServicios);
+        app.get("/estilistas/servicios/{id}",estilistaController::fidnEstilistaServicio);
 
     }
 }

@@ -58,13 +58,10 @@ public class EstilistaRepository {
         return estilistas;
     }
 
-    // Dentro de EstilistaRepository
-
-    /**
-     * Obtiene el detalle completo de un solo estilista por su ID.
-     */
+    //detalles de un estilista
     public EstilistaDTO findEstilistaById(int id) throws SQLException {
         EstilistaDTO dto = null;
+
 
         String sql = "SELECT "
                 + "    e.id_empleado, "
@@ -132,6 +129,7 @@ public class EstilistaRepository {
         }
         return horarios;
     }
+    //lista de servicios de un estilista
     public List<Servicio> findServicios(int idEstilista) throws SQLException{
         List<Servicio> servicios = new ArrayList<>();
         String sql = " SELECT s.id_servicio, s.nombre_servicio, s.descripcion " +
@@ -155,23 +153,27 @@ public class EstilistaRepository {
         }
         return servicios;
     }
-    /*
-    public void delete(int idEstilista, int idHorario) throws SQLException {
-        String sql = "DELETE FROM estilista_horario WHERE id_estilista = ? AND id_horario = ?";
+   //lista de estilistas de un servicio
+    public List<Estilista> findEstilistasServicios(int idServicio) throws SQLException{
+        List<Estilista> estilistas = new ArrayList<>();
+        String sql = "SELECT e.nombre AS nombre_estilistas " +
+                "FROM empleado e JOIN estilista_servicio es ON e.id_empleado = es.id_estilista " +
+                "JOIN servicio s ON es.id_servicio = s.id_servicio " +
+                "WHERE s.id_servicio = ?";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
-        ){
-            stmt.setInt(1, idEstilista);
-            stmt.setInt(2,idHorario);
-            int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas == 0){
-                throw new SQLException("La eliminacion fallo o no se encontaron los elementos");
-            }else{
-                System.out.println("se elimino exitosamente");
+                ){
+            stmt.setInt(1,idServicio);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                Estilista estilista = new Estilista();
+                estilista.setNombre(rs.getString("nombre_estilista"));
+                estilistas.add(estilista);
             }
         }
-    }*/
+        return estilistas;
+    }
     public void saveHorarios(Estilista estilista) throws SQLException{
         String sql = "INSERT INTO estilista_horario(id_estilista, id_horario) VALUES (?,?)";
         try(
@@ -203,22 +205,5 @@ public class EstilistaRepository {
             }
         }
     }
-    /*
-     public void delete(int idEstilista, int idServicio) throws SQLException{
-        String sql = "DELETE FROM estilista_servicio WHERE id_estilista = ? AND id_servicio = ?";
-        try(
-                Connection conn = DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-        ){
-            stmt.setInt(1,idEstilista);
-            stmt.setInt(2, idServicio);
-            int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas == 0){
-                throw new SQLException("La eliminacion fallo o no se encontaron los elementos");
-            }else{
-                System.out.println("se elimino exitosamente");
-            }
-        }
-    }
-     */
+
 }

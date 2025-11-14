@@ -11,6 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreguntaRepository {
+    public List<Pregunta> FindFormulario(int id) throws SQLException{
+        List<Pregunta> preguntas = new ArrayList<>();
+        String sql = "SELECT texto_pregunta FROM pregunta WHERE id_formulario = ?";
+        try (
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ){
+            stmt.setInt(1, id);
+            try(ResultSet rs = stmt.executeQuery()){
+                while (rs.next()){
+                    String pregunta = rs.getString("texto_pregunta");
+                    Pregunta pregunta1 = new Pregunta(pregunta);
+                    preguntas.add(pregunta1);
+                }
+            }
+        }
+        return preguntas;
+    }
     public List<Pregunta> findAll() throws SQLException{
         List<Pregunta> preguntas = new ArrayList<>();
         String sql = "SELECT * FROM pregunta";
@@ -19,10 +37,11 @@ public class PreguntaRepository {
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery();
                 ){
+
             while(rs.next()){
                 int idPregunta = rs.getInt("id_pregunta");
-                String pregunta = rs.getString("pregunta");
-                String respuesta = rs.getString("respuesta");
+                String pregunta = rs.getString("texto_pregunta");
+                String respuesta = rs.getString("texto_respuesta");
                 int idFormulario = rs.getInt("id_formulario");
                 Pregunta pre = new Pregunta(idPregunta, pregunta, respuesta, idFormulario);
                 preguntas.add(pre);
@@ -42,7 +61,7 @@ public class PreguntaRepository {
                 if (rs.next()) {
                     String preguntaTexto = rs.getString("texto_pregunta");
                     String respuestaTexto = rs.getString("texto_respuesta");
-                    int idFormulario = rs.getInt("formulario_id");
+                    int idFormulario = rs.getInt("id_formulario");
                     pregunta = new Pregunta(id, preguntaTexto, respuestaTexto, idFormulario);
                 }
             }
@@ -52,7 +71,7 @@ public class PreguntaRepository {
 
     public int save(Pregunta pregunta) throws SQLException {
         // En el modelo de DB, la respuesta puede ser NULL. Asumo que el modelo Pregunta tiene el campo 'respuesta'
-        String sql = "INSERT INTO pregunta(texto_pregunta, texto_respuesta, formulario_id) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO pregunta(texto_pregunta, texto_respuesta, id_formulario) VALUES(?, ?, ?)";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -97,7 +116,7 @@ public class PreguntaRepository {
     }
 
     public void update(Pregunta pregunta) throws SQLException {
-        String sql = "UPDATE pregunta SET texto_pregunta = ?, texto_respuesta = ?, formulario_id = ? WHERE id_pregunta = ?";
+        String sql = "UPDATE pregunta SET texto_pregunta = ?, texto_respuesta = ?, id_formulario = ? WHERE id_pregunta = ?";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);

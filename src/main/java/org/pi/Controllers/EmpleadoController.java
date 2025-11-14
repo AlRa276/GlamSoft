@@ -14,7 +14,7 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
-    // 🔹 GET: listar empleados por rol
+
     public void findAll(Context ctx) {
         try {
             int idRol = Integer.parseInt(ctx.pathParam("idRol"));
@@ -27,7 +27,6 @@ public class EmpleadoController {
         }
     }
 
-    // 🔹 GET: buscar empleado por id
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -40,7 +39,7 @@ public class EmpleadoController {
         }
     }
 
-    // 🔹 POST: guardar empleado
+
     public void save(Context ctx) {
         try {
             Empleado empleado = ctx.bodyAsClass(Empleado.class);
@@ -53,7 +52,6 @@ public class EmpleadoController {
         }
     }
 
-    // 🔹 PUT: actualizar empleado
     public void update(Context ctx) {
         try {
             Empleado empleado = ctx.bodyAsClass(Empleado.class);
@@ -66,7 +64,6 @@ public class EmpleadoController {
         }
     }
 
-    // 🔹 DELETE: eliminar empleado
     public void delete(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

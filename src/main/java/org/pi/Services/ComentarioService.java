@@ -14,17 +14,17 @@ public class ComentarioService {
         this.comentarioRepository = comentarioRepository;
     }
 
+    public List<Comentario> HistorialComen(int idClient)throws SQLException{
+        return comentarioRepository.findComenClien(idClient);
+    }
+    public List<Comentario> find8Comen()throws SQLException{
+        return comentarioRepository.find8Comen();
+    }
+
     public List<Comentario> findAllC()throws SQLException{
         return comentarioRepository.findAll();
     }
 
-    public Comentario findC(int id)throws SQLException{
-        if (id <= 0){
-            throw new IllegalArgumentException("La id debe ser mayor a cero");
-        }
-        return   comentarioRepository.findById(id);
-
-    }
 
     public int saveC(Comentario comentario)throws SQLException{
         String texto = comentario.getComentario();
@@ -45,14 +45,5 @@ public class ComentarioService {
         comentarioRepository.delete(id);
     }
 
-    public void updateC(Comentario comentario)throws SQLException{
-        if (comentario.getIdComentario() <= 0){
-            throw new IllegalArgumentException("El id debe ser un numero entero positivo");
-        }
-        Comentario existe = comentarioRepository.findById(comentario.getIdComentario());
-        if (existe == null){
-            throw new NoSuchElementException("No se puede actualizar: comentario inexistente");
-        }
-        comentarioRepository.update(comentario);
-    }
+
 }

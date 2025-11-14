@@ -16,7 +16,7 @@ public class PortafolioController {
         this.portafolioService = portafolioService;
     }
 
-    // 🔹 Listar todas las imágenes
+
     public void findAll(Context ctx) {
         try {
             List<Portafolio> portafolios = portafolioService.findAll();
@@ -25,8 +25,7 @@ public class PortafolioController {
             ctx.status(500).result("Error al obtener el portafolio: " + e.getMessage());
         }
     }
-
-    // 🔹 Guardar nueva imagen
+    //GuardarImagen
     public void savePortafolio(Context ctx) {
         try {
             Portafolio portafolio = ctx.bodyAsClass(Portafolio.class);
@@ -39,7 +38,7 @@ public class PortafolioController {
         }
     }
 
-    // 🔹 Actualizar nombre de imagen
+
     public void updatePortafolio(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -56,7 +55,7 @@ public class PortafolioController {
         }
     }
 
-    // 🔹 Eliminar imagen
+
     public void deletePortafolio(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

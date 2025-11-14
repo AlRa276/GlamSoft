@@ -15,12 +15,18 @@ public class PreguntaService {
         this.preguntaRepository = preguntaRepository;
     }
 
-    // 🔹 Obtener todas las preguntas
+    public List<Pregunta> findPreFormulario(int id) throws SQLException{
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a cero.");
+        }
+        return preguntaRepository.FindFormulario(id);
+    }
+
     public List<Pregunta> findAll() throws SQLException {
         return preguntaRepository.findAll();
     }
 
-    // 🔹 Obtener una pregunta por ID
+
     public Pregunta find(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero.");
@@ -34,7 +40,7 @@ public class PreguntaService {
         return pregunta;
     }
 
-    // 🔹 Guardar una nueva pregunta
+
     public int save(Pregunta pregunta) throws SQLException {
         if (pregunta.getPregunta() == null || pregunta.getPregunta().isBlank()) {
             throw new IllegalArgumentException("El texto de la pregunta es obligatorio.");
@@ -46,7 +52,6 @@ public class PreguntaService {
         return preguntaRepository.save(pregunta);
     }
 
-    // 🔹 Actualizar una pregunta existente
     public void update(Pregunta pregunta) throws SQLException {
         if (pregunta.getIdPregunta() <= 0) {
             throw new IllegalArgumentException("El ID de la pregunta debe ser mayor a cero.");
@@ -64,7 +69,7 @@ public class PreguntaService {
         preguntaRepository.update(pregunta);
     }
 
-    // 🔹 Eliminar una pregunta
+
     public void delete(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero.");

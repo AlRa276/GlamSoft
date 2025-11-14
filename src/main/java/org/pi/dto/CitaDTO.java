@@ -8,13 +8,24 @@ public class CitaDTO {
         private String estadoCita;
         private LocalDateTime fechaCita;
         private LocalDateTime fechaSolicitudCita;
-        private String clienteEmail; // Nuevo campo
-        private String estilistaNombre; // Nuevo campo
-        private String nombresServicios; // Nuevo campo (ej: "Corte, Tinte")
+        private String clienteEmail;
+        private String estilistaNombre;
+        private String nombresServicios;
+        private double precioTotal;
 
-        // ... Constructor, Getters y Setters
 
     public CitaDTO() {
+    }
+
+    public CitaDTO(int idCita, String estadoCita, LocalDateTime fechaCita, LocalDateTime fechaSolicitudCita, String clienteEmail, String estilistaNombre, String nombresServicios, double precioTotal) {
+        this.idCita = idCita;
+        this.estadoCita = estadoCita;
+        this.fechaCita = fechaCita;
+        this.fechaSolicitudCita = fechaSolicitudCita;
+        this.clienteEmail = clienteEmail;
+        this.estilistaNombre = estilistaNombre;
+        this.nombresServicios = nombresServicios;
+        this.precioTotal = precioTotal;
     }
 
     public CitaDTO(int idCita, String estadoCita, LocalDateTime fechaCita,
@@ -26,6 +37,14 @@ public class CitaDTO {
         this.clienteEmail = clienteEmail;
         this.estilistaNombre = estilistaNombre;
         this.nombresServicios = nombresServicios;
+    }
+
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
     }
 
     public int getIdCita() {

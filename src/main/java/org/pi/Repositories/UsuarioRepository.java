@@ -8,22 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 public class UsuarioRepository {
-    public List<Usuario> findAllUsers() throws SQLException{
-        List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT email FROM usuario";
-        try(
-                Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()
-                ){
-            while (rs.next()) {
-                String email = rs.getString("email");
-                Usuario usuario = new Usuario(email);
-                usuarios.add(usuario);
-            }
-        }
-        return usuarios;
-    }
+
     public Usuario findByUser(Usuario usuario)throws SQLException{
         String sql = "SELECT * FROM usuario WHERE email = ?";
         Usuario user = null;
@@ -34,10 +19,12 @@ public class UsuarioRepository {
             stmt.setString(1,usuario.getEmail());
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
+                user = new Usuario();
                 user.setIdUsuario(rs.getInt("id_usuario"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
                 user.setIdRol(rs.getInt("id_rol"));
+
             }
         }
         return user;

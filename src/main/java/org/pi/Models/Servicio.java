@@ -13,6 +13,14 @@ public class Servicio {
     public Servicio() {
     }
 
+    public Servicio(String imagenURL, String nombreServicio, int duracionMinutos, double precio, String descripcion) {
+        this.imagenURL = imagenURL;
+        this.nombreServicio = nombreServicio;
+        this.duracionMinutos = duracionMinutos;
+        this.precio = precio;
+        this.descripcion = descripcion;
+    }
+
     public Servicio(int idServicio, String imagenURL,
                     String nombreServicio, int duracionMinutos, double precio, String descripcion, int idCategoria, int idFormulario) {
         this.idServicio = idServicio;

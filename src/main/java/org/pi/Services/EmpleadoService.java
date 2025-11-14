@@ -14,7 +14,6 @@ public class EmpleadoService {
         this.empleadoRepository = empleadoRepository;
     }
 
-    // 🔹 Listar empleados por rol
     public List<Empleado> findAll(int idRol) throws SQLException {
         if (idRol <= 0) {
             throw new IllegalArgumentException("El id del rol debe ser mayor a cero");
@@ -22,7 +21,7 @@ public class EmpleadoService {
         return empleadoRepository.findAll(idRol);
     }
 
-    // 🔹 Buscar empleado por ID
+
     public Empleado findById(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El id del empleado debe ser mayor a cero");
@@ -34,7 +33,7 @@ public class EmpleadoService {
         return empleado;
     }
 
-    // 🔹 Guardar nuevo empleado
+
     public int save(Empleado empleado) throws SQLException {
         // Validaciones de campos obligatorios
         if (empleado.getEmail() == null || empleado.getEmail().isBlank()) {
@@ -65,7 +64,6 @@ public class EmpleadoService {
         return empleadoRepository.save(empleado);
     }
 
-    // 🔹 Actualizar empleado
     public void update(Empleado empleado) throws SQLException {
         if (empleado.getIdEmpleado() <= 0) {
             throw new IllegalArgumentException("El id del empleado debe ser mayor a cero");
@@ -75,7 +73,7 @@ public class EmpleadoService {
         if (existe == null) {
             throw new NoSuchElementException("No se puede actualizar. El empleado no existe");
         }
-
+        //campos obligatorios
         if (empleado.getEmail() == null || empleado.getEmail().isBlank()) {
             throw new IllegalArgumentException("El email no puede estar vacío");
         }
@@ -86,7 +84,7 @@ public class EmpleadoService {
         empleadoRepository.update(empleado);
     }
 
-    // 🔹 Eliminar empleado
+
     public void delete(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El id debe ser mayor a cero");

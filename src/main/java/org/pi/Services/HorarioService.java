@@ -16,12 +16,11 @@ public class HorarioService {
         this.horarioRepository = horarioRepository;
     }
 
-    // 🔹 Obtener todos los horarios
     public List<Horario> findAll() throws SQLException {
         return horarioRepository.findAll();
     }
 
-    // 🔹 Guardar un nuevo horario
+
     public int save(Horario horario) throws SQLException {
         // Validaciones
         if (horario.getHoraInicio() == null || horario.getHoraFin() == null) {
@@ -37,7 +36,7 @@ public class HorarioService {
         return horarioRepository.save(horario);
     }
 
-    // 🔹 Eliminar horario por ID
+
     public void delete(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero.");
@@ -45,7 +44,7 @@ public class HorarioService {
         horarioRepository.delete(id);
     }
 
-    // 🔹 Actualizar horario existente
+
     public void update(Horario horario) throws SQLException {
         if (horario.getIdHorario() <= 0) {
             throw new IllegalArgumentException("El ID del horario es inválido.");

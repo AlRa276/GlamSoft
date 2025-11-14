@@ -12,9 +12,6 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> findAllUsers() throws SQLException{
-        return usuarioRepository.findAllUsers();
-    }
 
     public Usuario findUser(String email) throws SQLException{
         return usuarioRepository.findUser(email);
@@ -24,8 +21,8 @@ public class UsuarioService {
         return usuarioRepository.findByUser(usuario);
     }
 
-    public void saveUser(Usuario usuario) throws SQLException{
-        usuarioRepository.saveUser(usuario);
+    public int saveUser(Usuario usuario) throws SQLException{
+        return usuarioRepository.saveUser(usuario);
     }
 
     public void deleteUser(String email) throws SQLException{

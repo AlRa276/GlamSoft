@@ -19,9 +19,8 @@ public class FormularioRepository {
                 ResultSet rs = stmt.executeQuery()
                 ){
             while(rs.next()){
-                int id = rs.getInt("id_formulario");
-                String nombre = rs.getString("nombre_formulario");
-                Formulario formulario = new Formulario(id,nombre);
+                Formulario formulario = new Formulario();
+               formulario.setNombreFormulario(rs.getString("nombre_formulario"));
                 formularios.add(formulario);
             }
         }

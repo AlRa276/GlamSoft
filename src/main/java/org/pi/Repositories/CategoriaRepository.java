@@ -9,16 +9,15 @@ public class CategoriaRepository {
 
     public List<Categoria> findAllCategoria() throws SQLException {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT * FROM categoria";
+        String sql = "SELECT nombre_categoria FROM categoria";
         try (
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
         ) {
             while(rs.next()){
-                int id = rs.getInt("id_categoria");
                 String nombre = rs.getString("nombre_categoria");
-                Categoria cat = new Categoria(id, nombre);
+                Categoria cat = new Categoria(nombre);
                 categorias.add(cat);
             }
         }
@@ -26,7 +25,7 @@ public class CategoriaRepository {
     }
     public Categoria findCategoria(int id) throws SQLException {
         Categoria categoria = null;
-        String sql = "SELECT * FROM categoria WHERE id_categoria = ?";
+        String sql = "SELECT nombre_categoria FROM categoria WHERE id_categoria = ?";
         try (
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
@@ -36,7 +35,7 @@ public class CategoriaRepository {
 
                 if (rs.next()){
                     String nombre = rs.getString("nombre_categoria");
-                    categoria = new Categoria(id, nombre);
+                    categoria = new Categoria(nombre);
                 }
             }
         }
@@ -84,22 +83,4 @@ public class CategoriaRepository {
         }
     }
 
-    public void updateCategoria(Categoria categoria) throws SQLException {
-        String sql = "UPDATE categoria SET nombre_categoria = ? WHERE id_categoria = ?";
-        try(
-                Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ) {
-            stmt.setString(1,categoria.getNombreCategoria());
-            stmt.setInt(2,categoria.getIdCategoria());
-            //verificacion
-            int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas == 0){
-                System.out.println("No se encontro el id");
-            }else {
-                System.out.println("se actualizo el elemento con exito");
-            }
-
-        }
-    }
 }

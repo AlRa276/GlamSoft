@@ -4,9 +4,9 @@ public class EstilistaDTO {
         private int idEmpleado;
         private String nombre;
         private String telefono;
-        private String emailUsuario; // Opcional, si quieres ver el email
-        private String horarios;      // Ejemplo: "Lunes 09:00-17:00, Martes 10:00-18:00"
-        private String servicios;     // Ejemplo: "Corte Caballero, Tinte, Manicura"
+        private String emailUsuario;
+        private String horarios;
+        private String servicios;
 
         // ... Constructor, Getters y Setters
 

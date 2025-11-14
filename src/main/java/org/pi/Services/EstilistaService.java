@@ -16,12 +16,15 @@ public class EstilistaService {
         this.estilistaRepository = estilistaRepository;
     }
 
-    // 🔹 Listar todos los estilistas con sus datos combinados
+
     public List<EstilistaDTO> findAllEstilistas() throws SQLException {
         return estilistaRepository.findAllEstilistas();
     }
 
-    // 🔹 Buscar un estilista específico por ID
+    public List<Estilista> findEstilistaServicio(int idServicio)throws SQLException{
+        return estilistaRepository.findEstilistasServicios(idServicio);
+    }
+
     public EstilistaDTO findEstilistaById(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID del estilista debe ser mayor a cero");
@@ -34,7 +37,6 @@ public class EstilistaService {
         return estilista;
     }
 
-    // 🔹 Obtener horarios del estilista
     public List<Horario> findHorarios(int idEstilista) throws SQLException {
         if (idEstilista <= 0) {
             throw new IllegalArgumentException("El ID del estilista debe ser mayor a cero");
@@ -48,7 +50,6 @@ public class EstilistaService {
         return horarios;
     }
 
-    // 🔹 Obtener servicios del estilista
     public List<Servicio> findServicios(int idEstilista) throws SQLException {
         if (idEstilista <= 0) {
             throw new IllegalArgumentException("El ID del estilista debe ser mayor a cero");
@@ -62,7 +63,6 @@ public class EstilistaService {
         return servicios;
     }
 
-    // 🔹 Asignar un horario a un estilista
     public void saveHorario(Estilista estilista) throws SQLException {
         if (estilista.getIdEmpleado() <= 0) {
             throw new IllegalArgumentException("El ID del estilista debe ser mayor a cero");
@@ -83,7 +83,6 @@ public class EstilistaService {
         estilistaRepository.saveHorarios(estilista);
     }
 
-    // 🔹 Asignar un servicio a un estilista
     public void saveServicio(Estilista estilista) throws SQLException {
         if (estilista.getIdEmpleado() <= 0) {
             throw new IllegalArgumentException("El ID del estilista debe ser mayor a cero");

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServicioRepository {
-
+    //mostrar todos
     public List<Servicio> findAll() throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         String sql = "SELECT * FROM servicio";
@@ -33,10 +33,10 @@ public class ServicioRepository {
         }
         return servicios;
     }
-
+    //mostrar uno
     public Servicio find(int id) throws SQLException {
         Servicio servicio = null;
-        String sql = "SELECT * FROM servicio WHERE id_servicio = ?";
+        String sql = "SELECT imagen, nombre_servicio, duracion_minutos, precio, descripcion FROM servicio WHERE id_servicio = ?";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
@@ -49,14 +49,53 @@ public class ServicioRepository {
                     int duracionMinutos = rs.getInt("duracion_minutos");
                     double precio = rs.getDouble("precio");
                     String descripcion = rs.getString("descripcion");
-                    int categoriaId = rs.getInt("categoria_id");
-                    Integer formularioId = rs.getObject("formulario_id") != null ? rs.getInt("formulario_id") : null;
-
-                    servicio = new Servicio(id, imagen, nombreServicio, duracionMinutos, precio, descripcion, categoriaId, formularioId);
+                    servicio = new Servicio( imagen, nombreServicio, duracionMinutos, precio, descripcion);
                 }
             }
         }
         return servicio;
+    }
+
+    //mostrar los nombres de los servicio
+    public List<Servicio> findNombresServicios() throws SQLException {
+        List<Servicio> servicios = new ArrayList<>();
+        String sql = "SELECT nombre_servicio FROM servicio ";
+        try (
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                Servicio servicio = new Servicio();
+                servicio.setNombreServicio(rs.getString("nombre_servicio"));
+                servicios.add(servicio);
+            }
+        }
+        return servicios;
+    }
+
+    //mostrar todos por categoria
+    public List<Servicio> findByCategoria(int idCategoria) throws SQLException {
+        List<Servicio> servicios = new ArrayList<>();
+        String sql = "SELECT imagen, nombre_servicio, duracion_minutos, precio, descripcion FROM servicio WHERE id_categoria = ?";
+        try (
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            stmt.setInt(1, idCategoria);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String imagen = rs.getString("imagen");
+                    String nombreServicio = rs.getString("nombre_servicio");
+                    int duracionMinutos = rs.getInt("duracion_minutos");
+                    double precio = rs.getDouble("precio");
+                    String descripcion = rs.getString("descripcion");
+                    Servicio servicio = new Servicio( imagen, nombreServicio, duracionMinutos, precio, descripcion);
+                    servicios.add(servicio);
+                }
+            }
+        }
+        return servicios;
     }
 
     public int save(Servicio servicio) throws SQLException {

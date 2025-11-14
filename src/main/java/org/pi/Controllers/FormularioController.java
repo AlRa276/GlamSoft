@@ -15,7 +15,7 @@ public class FormularioController {
         this.formularioService = formularioService;
     }
 
-    // 🔹 Obtener todos los formularios
+
     public void findAll(Context ctx) {
         try {
             List<Formulario> formularios = formularioService.findAllFormulario();
@@ -25,7 +25,7 @@ public class FormularioController {
         }
     }
 
-    // 🔹 Obtener formulario por ID
+
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -38,7 +38,6 @@ public class FormularioController {
         }
     }
 
-    // 🔹 Crear nuevo formulario
     public void save(Context ctx) {
         try {
             Formulario formulario = ctx.bodyAsClass(Formulario.class);
@@ -51,9 +50,10 @@ public class FormularioController {
         }
     }
 
-    // 🔹 Actualizar formulario
+
     public void updateFormulario(Context ctx) {
         try {
+            int id = Integer.parseInt(ctx.pathParam("id"));
             Formulario formulario = ctx.bodyAsClass(Formulario.class);
             formularioService.updateFormulario(formulario);
             ctx.status(200).result("Formulario actualizado correctamente");
@@ -64,7 +64,7 @@ public class FormularioController {
         }
     }
 
-    // 🔹 Eliminar formulario
+
     public void deleteFormulario(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

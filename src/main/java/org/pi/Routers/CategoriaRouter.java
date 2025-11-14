@@ -14,6 +14,5 @@ public class CategoriaRouter {
         app.get("/categorias/{id}",categoriaController::findCategoria);
         app.post("/categorias",categoriaController::saveCategoria);
         app.delete("/categorias/{id}",categoriaController::deleteCategoria);
-        app.patch("/categorias",categoriaController::updateCategoria);
     }
 }

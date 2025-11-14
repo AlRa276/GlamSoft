@@ -15,7 +15,15 @@ public class PreguntaController {
         this.preguntaService = preguntaService;
     }
 
-    // 🔹 GET /preguntas → listar todas
+    public void findPreFormulario(Context ctx){
+        try{
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            List<Pregunta> preguntas = preguntaService.findPreFormulario(id);
+            ctx.status(200).json(preguntas);
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener las preguntas: " + e.getMessage());
+        }
+    }
     public void findAll(Context ctx) {
         try {
             List<Pregunta> preguntas = preguntaService.findAll();
@@ -25,7 +33,6 @@ public class PreguntaController {
         }
     }
 
-    // 🔹 GET /preguntas/{id} → obtener por ID
     public void findById(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -42,7 +49,6 @@ public class PreguntaController {
         }
     }
 
-    // 🔹 POST /preguntas → crear nueva
     public void savePregunta(Context ctx) {
         try {
             Pregunta pregunta = ctx.bodyAsClass(Pregunta.class);
@@ -55,7 +61,6 @@ public class PreguntaController {
         }
     }
 
-    // 🔹 PUT /preguntas/{id} → actualizar
     public void updatePregunta(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
@@ -74,7 +79,6 @@ public class PreguntaController {
         }
     }
 
-    // 🔹 DELETE /preguntas/{id} → eliminar
     public void deletePregunta(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));

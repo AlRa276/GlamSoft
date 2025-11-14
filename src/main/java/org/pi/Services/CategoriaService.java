@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-//falta la logica de las reglas del negocio
+
 public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
@@ -51,22 +51,4 @@ public class CategoriaService {
         categoriaRepository.deleteCategoria(id);
     }
 
-    public void updateCategoria( Categoria categoria) throws SQLException{
-        if (categoria.getIdCategoria() <= 0){
-            throw new IllegalArgumentException("La id debe ser mayor a cero");
-        }
-        Categoria existe = categoriaRepository.findCategoria(categoria.getIdCategoria());
-        if (existe == null){
-            throw new NoSuchElementException("No se puede actualizar la categoria. No se encontro la categoria");
-        }
-        String nombre = categoria.getNombreCategoria();
-        List<Categoria> categorias = findAllCategoria();
-        boolean nombreExiste = categorias.stream().anyMatch(c -> c.getNombreCategoria().equalsIgnoreCase(nombre)
-                && c.getIdCategoria() != categoria.getIdCategoria());
-
-        if (nombreExiste){
-            throw new IllegalArgumentException("Otra categoria ya tiene ese nombre");
-        }
-        categoriaRepository.updateCategoria(categoria);
-    }
 }

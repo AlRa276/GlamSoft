@@ -12,20 +12,68 @@ public class ComentarioRepository {
 
     public List<Comentario> findAll() throws SQLException{
         List<Comentario> comentarios = new ArrayList<>();
-        String  sql = "SELECT * FROM comentario";
+        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+                "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
+                "ORDEN BY c.fecha_comentario DESC";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
         ){
             while(rs.next()) {
-                int id = rs.getInt("id_comentario");
-                String comentario = rs.getString("comentario");
+                Comentario comen = new Comentario();
+                comen.setComentario(rs.getString("comentario"));
                 Timestamp fecha = rs.getTimestamp("fecha_comentario");
-                LocalDateTime fechaComentario = fecha.toLocalDateTime();
-                int idCita = rs.getInt("id_cita");
-                int idCliente = rs.getInt("id_cliente");
-                Comentario comen = new Comentario(id,comentario,fechaComentario,idCita, idCliente);
+                comen.setFechaComentario(fecha.toLocalDateTime());
+                comen.setEmailCliente(rs.getString("email_cliente"));
+
+                comentarios.add(comen);
+            }
+        }
+        return comentarios;
+    }
+    public List<Comentario> findComenClien(int idClient) throws SQLException{
+        List<Comentario> comentarios = new ArrayList<>();
+        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+                "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
+                "WHERE c.id_cliente = ?";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ){
+            stmt.setInt(1,idClient);
+            while(rs.next()) {
+                Comentario comen = new Comentario();
+                comen.setComentario(rs.getString("comentario"));
+                Timestamp fecha = rs.getTimestamp("fecha_comentario");
+                comen.setFechaComentario(fecha.toLocalDateTime());
+                comen.setEmailCliente(rs.getString("email_cliente"));
+
+                comentarios.add(comen);
+            }
+        }
+        return comentarios;
+    }
+
+    public List<Comentario> find8Comen() throws SQLException{
+        List<Comentario> comentarios = new ArrayList<>();
+        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+                "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
+                "ORDEN BY c.fecha_comentario DESC " +
+                "LIMIT 6";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ){
+            while(rs.next()) {
+                Comentario comen = new Comentario();
+                comen.setComentario(rs.getString("comentario"));
+                Timestamp fecha = rs.getTimestamp("fecha_comentario");
+                comen.setFechaComentario(fecha.toLocalDateTime());
+                comen.setEmailCliente(rs.getString("email_cliente"));
+
                 comentarios.add(comen);
             }
         }
@@ -96,22 +144,5 @@ public class ComentarioRepository {
             };
         }
     }
-    //no se puede actualizar un comentario
-    public void update(Comentario comentario) throws SQLException{
-        String sql = "UPDATE comentario SET comentario = ? WHERE id_comentario = ?";
-        try(
-                Connection conn = DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ){
-            stmt.setString(1,comentario.getComentario());
-            stmt.setInt(2,comentario.getIdComentario());
-            int filasAfectadas = stmt.executeUpdate();
-            //verificacion
-            if (filasAfectadas == 0){
-                System.out.println("No se encontro el id");
-            }else {
-                System.out.println("actualizacion exitosa");
-            };
-        }
-    }
+
 }

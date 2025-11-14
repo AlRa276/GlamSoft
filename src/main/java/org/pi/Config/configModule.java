@@ -106,6 +106,15 @@ public class configModule {
         return rs;
     }
 
+    public static UsuarioRouter initUsuarioRouter(){
+        UsuarioRepository ur = new UsuarioRepository();
+        UsuarioService us = new UsuarioService(ur);
+        TokenManager tk = new TokenManager();
+        UsuarioController uc = new UsuarioController(us,tk);
+        UsuarioRouter ru = new UsuarioRouter(uc);
+        return ru;
+    }
+
     public static ValoracionRouter initValoracionRouter(){
         ValoracionRepository vr = new ValoracionRepository();
         ValoracionService vs = new ValoracionService(vr);

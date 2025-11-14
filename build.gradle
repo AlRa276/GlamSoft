@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id ("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = 'org.pi'
@@ -22,6 +23,27 @@ dependencies {
     implementation('io.jsonwebtoken:jjwt-api:0.11.5')
     runtimeOnly('io.jsonwebtoken:jjwt-impl:0.11.5')
     runtimeOnly('io.jsonwebtoken:jjwt-jackson:0.11.5')
+}
+
+java {
+    // Asegúrate de usar esta versión para compilar
+    sourceCompatibility = JavaVersion.VERSION_17
+    // Y para que el bytecode generado sea compatible con Java 17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+// Reemplaza todo el bloque "tasks.named..." con este bloque:
+shadowJar {
+    archiveBaseName.set('GlamSoft')
+    archiveVersion.set('1.0-SNAPSHOT')
+    archiveClassifier.set('all')
+
+    // Configuración del Main-Class
+    manifest {
+        attributes('Main-Class': 'org.pi.Main')
+    }
+
+    // Establece el nombre final
+    archiveFileName.set("Back_GlamSoft2.jar")
 }
 
 test {

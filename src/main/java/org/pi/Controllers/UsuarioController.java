@@ -22,8 +22,9 @@ public class UsuarioController {
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
             String passHased = Password.hash(usuario.getPassword()).withBcrypt().getResult();
             usuario.setPassword(passHased);
-            usuarioService.saveUser(usuario);
-            String token = tokenManager.issueToken(""+usuario.getIdUsuario());
+            int id = usuarioService.saveUser(usuario);
+            usuario.setIdUsuario(id);
+            String token = tokenManager.issueToken("" + id);
             ctx.status(201).json(Map.of(
                     "userId", usuario.getIdUsuario(),
                     "token", token,
@@ -63,14 +64,6 @@ public class UsuarioController {
             ));
         }
     }
-    public void findAllUsers(Context ctx){
-        try{
-            List<Usuario> usuarios = usuarioService.findAllUsers();
-            ctx.json(usuarios);
-        }catch (SQLException e){
-            ctx.status(404).result("Elementos no encontrados");
-        }
-    }
 
     public void findUser(Context ctx){
         try{
@@ -94,8 +87,8 @@ public class UsuarioController {
 
     public void updateUser(Context ctx){
         try{
-            String email = ctx.pathParam("email");
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
+            usuarioService.updateUser(usuario);
             ctx.status(204).result("Se creo el elemento con exito");
         } catch (Exception e) {
             ctx.status(404).result("No se encontro el elemento");

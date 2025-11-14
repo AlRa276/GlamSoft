@@ -12,7 +12,7 @@ public class DBconfig {
         if (dataSource == null) {
             String host = "localhost";
             String port = "3306";
-            String user = "root";
+            String user = "mariana";
             String dbName = "pruebas";
             String username = "mariana";
             String password = "1234";

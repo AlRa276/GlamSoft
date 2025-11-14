@@ -12,8 +12,9 @@ public class PreguntaRouter {
      public void register(Javalin app){
         app.get("/preguntas",preguntaController::findAll);
         app.get("/preguntas/{id}",preguntaController::findById);
+        app.get("/preguntas/formularios/{id}",preguntaController::findPreFormulario);
         app.post("/preguntas",preguntaController::savePregunta);
         app.delete("/preguntas/{id}",preguntaController::deletePregunta);
-        app.patch("/preguntas",preguntaController::updatePregunta);
+        app.patch("/preguntas/{id}",preguntaController::updatePregunta);
      }
 }

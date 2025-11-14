@@ -5,6 +5,7 @@ import org.pi.Repositories.CitaRepository;
 import org.pi.dto.CitaDTO;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,10 +18,24 @@ public class CitaService {
         this.citaRepository = citaRepository;
     }
 
+    public List<CitaDTO> citasPorMes(int mes, int año) throws SQLException {
+        return citaRepository.findCitasMes(mes, año);
+    }
+
+    public List<CitaDTO> citasPorSemana(int año, int semana) throws SQLException {
+        return citaRepository.findCitasSemana(año, semana);
+    }
+
+    public List<CitaDTO> citasPorDia(LocalDate fecha) throws SQLException {
+        return citaRepository.findCitasDia(fecha);
+    }
+
     public List<CitaDTO> findAllCitas() throws SQLException{
         return citaRepository.findAllCitas();
     }
-
+    public List<CitaDTO> historialClienteCitas(int idCliente) throws SQLException{
+        return citaRepository.findCitaCliente(idCliente);
+    }
     public CitaDTO findCita(int id) throws SQLException{
         if (id <= 0){
             throw new IllegalArgumentException("La id debe ser mayor a cero");
@@ -36,6 +51,7 @@ public class CitaService {
         LocalDateTime fechaSolicitud = cita.getFechaSolicitudCita();
         LocalDateTime fechaCita = cita.getFechaCita();
         List<Integer> servicioIds = cita.getServicios();
+        //validar fecha
         if (!fechaCita.isAfter(fechaSolicitud)) {
             throw new Exception("La fecha de la cita debe ser despues de la fecha de solicitud.");
         }
@@ -51,16 +67,14 @@ public class CitaService {
         int duracionTotalMinutos = citaRepository.calcularDuracionTotal(servicioIds);
         LocalDateTime horaFinCita = fechaCita.plusMinutes(duracionTotalMinutos);
 
-        // Paso 5b: Validar Traslape en el Repositorio de Cita
+        //evitar citas sobrepuesta
         if (citaRepository.existeTraslape(cita.getIdEstilista(), fechaCita, horaFinCita)) {
             throw new IllegalStateException("El estilista no está disponible en el horario seleccionado (Traslape).");
         }
 
-        // 7. Asignar estado inicial (Si es necesario)
         if (cita.getEstadoCita() == null || cita.getEstadoCita().trim().isEmpty()) {
             cita.setEstadoCita("PENDIENTE");
         }
-        //falta logica para evitar traslapes
         return citaRepository.save(cita);
     }
 
@@ -94,6 +108,7 @@ public class CitaService {
             if (!fechaCita.isAfter(fechaSolicitud)) {
                 throw new Exception("La fecha de la cita debe ser despues de la fecha de solicitud.");
             }
+            //falta logica para evitar citas sobrePuestas
             citaRepository.updateFecha(cita);
         }
 

@@ -14,12 +14,10 @@ public class FormularioService {
         this.formularioRepository = fr;
     }
 
-    // 🔹 Obtener todos los formularios
     public List<Formulario> findAllFormulario() throws SQLException {
         return formularioRepository.findAll();
     }
 
-    // 🔹 Buscar un formulario por ID
     public Formulario findFormulario(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID del formulario debe ser mayor a cero");
@@ -31,7 +29,6 @@ public class FormularioService {
                 .orElseThrow(() -> new NoSuchElementException("No se encontró el formulario con ID: " + id));
     }
 
-    // 🔹 Guardar nuevo formulario
     public int saveFormulario(Formulario formulario) throws SQLException {
         String nombre = formulario.getNombreFormulario();
 
@@ -50,7 +47,6 @@ public class FormularioService {
         return formularioRepository.save(formulario);
     }
 
-    // 🔹 Eliminar formulario
     public void deleteFormulario(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser mayor a cero");
@@ -66,7 +62,7 @@ public class FormularioService {
         formularioRepository.delete(id);
     }
 
-    // 🔹 Actualizar formulario
+
     public void updateFormulario(Formulario formulario) throws SQLException {
         if (formulario.getIdFormulario() <= 0) {
             throw new IllegalArgumentException("El ID del formulario debe ser mayor a cero");
@@ -85,7 +81,7 @@ public class FormularioService {
 
         boolean nombreDuplicado = formularios.stream()
                 .anyMatch(f -> f.getNombreFormulario().equalsIgnoreCase(nombre)
-                        && f.getIdFormulario() != formulario.getIdFormulario());
+                        && f.getNombreFormulario() != formulario.getNombreFormulario());
         if (nombreDuplicado) {
             throw new IllegalArgumentException("Otro formulario ya tiene ese nombre");
         }

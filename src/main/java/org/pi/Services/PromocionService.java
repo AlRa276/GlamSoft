@@ -15,12 +15,11 @@ public class PromocionService {
         this.promocionRepository = promocionRepository;
     }
 
-    // 🔹 Listar todas las promociones
     public List<Promocion> findAll() throws SQLException {
         return promocionRepository.findAll();
     }
 
-    // 🔹 Buscar una promoción por ID
+
     public Promocion findById(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID de la promoción debe ser mayor a cero");
@@ -33,13 +32,12 @@ public class PromocionService {
         return promocion;
     }
 
-    // 🔹 Crear una nueva promoción
+
     public int save(Promocion promocion) throws SQLException {
         validarPromocion(promocion);
         return promocionRepository.save(promocion);
     }
 
-    // 🔹 Actualizar promoción existente
     public void update(Promocion promocion) throws SQLException {
         if (promocion.getIdPromocion() <= 0) {
             throw new IllegalArgumentException("El ID de la promoción debe ser válido para actualizar");
@@ -48,7 +46,6 @@ public class PromocionService {
         promocionRepository.update(promocion);
     }
 
-    // 🔹 Eliminar promoción
     public void delete(int id) throws SQLException {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID de la promoción debe ser mayor a cero");
@@ -56,7 +53,6 @@ public class PromocionService {
         promocionRepository.delete(id);
     }
 
-    // 🔹 Obtener servicios de una promoción
     public List<Servicio> findServicios(int idPromocion) throws SQLException {
         if (idPromocion <= 0) {
             throw new IllegalArgumentException("El ID de la promoción debe ser mayor a cero");
@@ -70,7 +66,6 @@ public class PromocionService {
         return servicios;
     }
 
-    // 🔹 Asignar servicio a promoción
     public void saveServicio(Promocion promocion) throws SQLException {
         if (promocion.getIdPromocion() <= 0) {
             throw new IllegalArgumentException("El ID de la promoción debe ser mayor a cero");
@@ -79,7 +74,7 @@ public class PromocionService {
             throw new IllegalArgumentException("El ID del servicio debe ser mayor a cero");
         }
 
-        // Evitar duplicados (por ID del servicio)
+        // Evitar duplicados
         List<Servicio> serviciosExistentes = promocionRepository.findServicios(promocion.getIdPromocion());
         boolean yaAsignado = serviciosExistentes.stream()
                 .anyMatch(s -> s.getIdServicio() == promocion.getIdServicio());
@@ -88,12 +83,11 @@ public class PromocionService {
             throw new IllegalArgumentException("El servicio ya está asignado a esta promoción");
         }
 
-        // Guardar relación servicio-promoción
         promocionRepository.saveServicios(promocion);
     }
 
 
-    // 🔸 Validación interna de campos de promoción
+    //Validación interna de campos de promoción
     private void validarPromocion(Promocion p) {
         if (p.getNombrePromocion() == null || p.getNombrePromocion().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de la promoción es obligatorio");
