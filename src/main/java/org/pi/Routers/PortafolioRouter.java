@@ -12,6 +12,7 @@ public class PortafolioRouter {
 
     public void register(Javalin app){
         app.get("/imagenes",portafolioController::findAll);
+        app.get("/imagenes/inicio",portafolioController::find4);
         app.post("/imagenes",portafolioController::savePortafolio);
         app.delete("/imagenes/{id}",portafolioController::deletePortafolio);
         app.patch("/imagenes",portafolioController::updatePortafolio);

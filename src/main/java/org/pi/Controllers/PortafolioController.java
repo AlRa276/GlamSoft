@@ -16,7 +16,14 @@ public class PortafolioController {
         this.portafolioService = portafolioService;
     }
 
-
+    public void find4(Context ctx){
+        try{
+            List<Portafolio> portafolios = portafolioService.find4();
+            ctx.status(200).json(portafolios);
+        } catch (SQLException e) {
+            ctx.status(500).result("Error al obtener el portafolio: " + e.getMessage());
+        }
+    }
     public void findAll(Context ctx) {
         try {
             List<Portafolio> portafolios = portafolioService.findAll();

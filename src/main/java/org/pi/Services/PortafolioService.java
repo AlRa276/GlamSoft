@@ -14,6 +14,10 @@ public class PortafolioService {
     public PortafolioService(PortafolioRepository portafolioRepository) {
         this.portafolioRepository = portafolioRepository;
     }
+    //mostrar los ultimos 4
+    public List<Portafolio> find4() throws SQLException{
+        return portafolioRepository.find4();
+    }
 
     public List<Portafolio> findAll() throws SQLException {
         return portafolioRepository.findAll();
@@ -21,7 +25,13 @@ public class PortafolioService {
 
     public int save(Portafolio portafolio) throws SQLException {
         // Validaciones básicas
-        if (portafolio.getImageURL() == null || portafolio.getImageURL().isBlank()) {
+        String url = portafolio.getImageURL();
+        List<Portafolio> imagenes = findAll();
+        boolean existe = imagenes.stream().anyMatch(i ->i.getImageURL().equals(url));
+        if (existe){
+            throw new IllegalArgumentException("La imagen ya existe");
+        }
+        if (url == null || url.isBlank()) {
             throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
         }
         if (portafolio.getNombreImagen() == null || portafolio.getNombreImagen().isBlank()) {

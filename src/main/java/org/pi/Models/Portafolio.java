@@ -14,6 +14,10 @@ public class Portafolio {
     public Portafolio() {
     }
 
+    public Portafolio(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     public String getImageURL() {
         return imageURL;
     }

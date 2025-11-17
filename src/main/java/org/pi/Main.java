@@ -17,6 +17,7 @@ public class Main {
         configModule.initPromocionRouter().register(app);
         configModule.initRolRouter().register(app);
         configModule.initServicioRouter().register(app);
+        configModule.initUsuarioRouter().register(app);
         configModule.initValoracionRouter().register(app);
     }
 }

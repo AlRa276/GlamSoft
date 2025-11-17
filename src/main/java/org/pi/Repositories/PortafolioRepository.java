@@ -11,19 +11,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PortafolioRepository {
+    //mostrar todas las imagenes del portafolio
     public List<Portafolio> findAll()throws SQLException{
         List<Portafolio> portafolios = new ArrayList<>();
-        String sql = "SELECT * FROM portafolio";
+        String sql = "SELECT url FROM portafolio";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery();
                 ){
             while (rs.next()){
-                int idImagen = rs.getInt("id_imagen");
                 String imagenURL = rs.getString("url");
-                String nombreImagen = rs.getString("nombre_imagen");
-                Portafolio portafolio = new Portafolio(idImagen, imagenURL, nombreImagen);
+                Portafolio portafolio = new Portafolio( imagenURL);
+                portafolios.add(portafolio);
+            }
+        }
+        return portafolios;
+    }
+    //mostrar los ultimos 4
+    public List<Portafolio> find4()throws SQLException{
+        List<Portafolio> portafolios = new ArrayList<>();
+        String sql = "SELECT url FROM portafolio " +
+                "ORDER BY id_imagen DESC " +
+                "LIMIT 4";
+        try(
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+        ){
+            while (rs.next()){
+                String imagenURL = rs.getString("url");
+                Portafolio portafolio = new Portafolio( imagenURL);
                 portafolios.add(portafolio);
             }
         }

@@ -21,6 +21,12 @@ public class PreguntaService {
         }
         return preguntaRepository.FindFormulario(id);
     }
+    public List<Pregunta> findFormularioServicio(int id) throws SQLException{
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a cero.");
+        }
+        return preguntaRepository.FindFormularioServicio(id);
+    }
 
     public List<Pregunta> findAll() throws SQLException {
         return preguntaRepository.findAll();

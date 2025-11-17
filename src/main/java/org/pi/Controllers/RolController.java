@@ -49,31 +49,5 @@ public class RolController {
             ctx.status(500).result("Error al guardar el rol: " + e.getMessage());
         }
     }
-
-
-    public void updateRol(Context ctx) {
-        try {
-            Rol rol = ctx.bodyAsClass(Rol.class);
-            rolService.updateRol(rol);
-            ctx.status(200).result("Rol actualizado correctamente");
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result("Datos inválidos: " + e.getMessage());
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al actualizar el rol: " + e.getMessage());
-        }
-    }
-
-
-    public void deleteRol(Context ctx) {
-        try {
-            int id = Integer.parseInt(ctx.pathParam("id"));
-            rolService.deleteRol(id);
-            ctx.status(200).result("Rol eliminado correctamente");
-        } catch (NumberFormatException e) {
-            ctx.status(400).result("El ID debe ser un número válido");
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al eliminar el rol: " + e.getMessage());
-        }
-    }
 }
 

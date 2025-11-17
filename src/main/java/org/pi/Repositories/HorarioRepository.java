@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HorarioRepository {
+    //ver todos los horarios
     public List<Horario> findAll()throws SQLException{
         List<Horario> horarios = new ArrayList<>();
         String sql = "SELECT * FROM horario";
@@ -17,18 +18,18 @@ public class HorarioRepository {
                 ResultSet rs = stmt.executeQuery();
                 ){
             while(rs.next()){
-                int id = rs.getInt("id_horario");
                 Time inicio = rs.getTime("hora_inicio");
                 LocalTime horaInicio = inicio.toLocalTime();
                 Time fin = rs.getTime("hora_fin");
                 LocalTime horaFin = fin.toLocalTime();
                 String diaSemana = rs.getString("dia_semana");
-                Horario horario = new Horario(id, horaInicio, horaFin, diaSemana);
+                Horario horario = new Horario(horaInicio, horaFin, diaSemana);
                 horarios.add(horario);
             }
         }
         return horarios;
     }
+    //crear
     public int save(Horario horario)throws SQLException{
         String sql = "INSERT INTO horario(hora_inicio, hora_fin, dia_semana) VALUES(?,?,?)";
         try(

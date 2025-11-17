@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreguntaRepository {
+    //encontrar preguntas de un formulario
     public List<Pregunta> FindFormulario(int id) throws SQLException{
         List<Pregunta> preguntas = new ArrayList<>();
         String sql = "SELECT texto_pregunta FROM pregunta WHERE id_formulario = ?";
@@ -18,6 +19,26 @@ public class PreguntaRepository {
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ){
+            stmt.setInt(1, id);
+            try(ResultSet rs = stmt.executeQuery()){
+                while (rs.next()){
+                    String pregunta = rs.getString("texto_pregunta");
+                    Pregunta pregunta1 = new Pregunta(pregunta);
+                    preguntas.add(pregunta1);
+                }
+            }
+        }
+        return preguntas;
+    }
+    public List<Pregunta> FindFormularioServicio(int id) throws SQLException{
+        List<Pregunta> preguntas = new ArrayList<>();
+        String sql = "SELECT p.texto_pregunta FROM pregunta p " +
+                "JOIN servicio s ON p.id_formulario = s.id_formulario " +
+                "WHERE s.id_servicio = ?";
+        try (
+                Connection conn = DBconfig.getDataSource().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+        ){
             stmt.setInt(1, id);
             try(ResultSet rs = stmt.executeQuery()){
                 while (rs.next()){

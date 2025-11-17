@@ -1,9 +1,7 @@
 package org.pi.Repositories;
 
 import org.pi.Config.DBconfig;
-import org.pi.Models.Estilista;
-import org.pi.Models.Horario;
-import org.pi.Models.Servicio;
+import org.pi.Models.*;
 import org.pi.dto.EstilistaDTO;
 
 import java.sql.*;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EstilistaRepository {
-
+    //detalles de un horario
     public List<EstilistaDTO> findAllEstilistas() throws SQLException {
         List<EstilistaDTO> estilistas = new ArrayList<>();
 
@@ -21,13 +19,10 @@ public class EstilistaRepository {
                 + "    e.nombre, "
                 + "    e.telefono, "
                 + "    u.email AS email_usuario, "
-                // Agregación de Servicios
                 + "    GROUP_CONCAT(DISTINCT s.nombre_servicio SEPARATOR ', ') AS nombres_servicios, "
-                // Agregación de Horarios
-                // Usamos CONCAT_WS para unir día y hora, y GROUP_CONCAT para unir todos los horarios
                 + "    GROUP_CONCAT(DISTINCT CONCAT(h.dia_semana, ' ', TIME_FORMAT(h.hora_inicio, '%H:%i'), '-', TIME_FORMAT(h.hora_final, '%H:%i')) SEPARATOR '; ') AS horarios_completos "
                 + "FROM empleado e "
-                + "JOIN usuario u ON e.id_usuario = u.id_usuario " // Para obtener el email
+                + "JOIN usuario u ON e.id_usuario = u.id_usuario "
                 + "LEFT JOIN estilista_servicio es ON e.id_empleado = es.id_estilista "
                 + "LEFT JOIN servicio s ON es.id_servicio = s.id_servicio "
                 + "LEFT JOIN estilista_horario eh ON e.id_empleado = eh.id_estilista "
@@ -48,7 +43,6 @@ public class EstilistaRepository {
                 dto.setTelefono(rs.getString("telefono"));
                 dto.setEmailUsuario(rs.getString("email_usuario"));
 
-                // Campos agregados (listas concatenadas)
                 dto.setServicios(rs.getString("nombres_servicios"));
                 dto.setHorarios(rs.getString("horarios_completos"));
 
@@ -76,14 +70,14 @@ public class EstilistaRepository {
                 + "LEFT JOIN servicio s ON es.id_servicio = s.id_servicio "
                 + "LEFT JOIN estilista_horario eh ON e.id_empleado = eh.id_estilista "
                 + "LEFT JOIN horario h ON eh.id_horario = h.id_horario "
-                + "WHERE e.id_empleado = ? " // <--- FILTRO POR ID
+                + "WHERE e.id_empleado = ? "
                 + "GROUP BY e.id_empleado, e.nombre, e.telefono, u.email";
 
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            // Establecer el parámetro del ID
+
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -99,9 +93,10 @@ public class EstilistaRepository {
                 }
             }
         }
-        // Si la ID no se encuentra, devuelve null
+
         return dto;
     }
+    //horarios de un estilista
     public List<Horario> findHorarios(int idEstilista) throws SQLException{
         List<Horario> horarios = new ArrayList<>();
         String sql = "SELECT h.id_horario, h.dia_semana, h.hora_inicio, h.hora_final " +
@@ -153,27 +148,39 @@ public class EstilistaRepository {
         }
         return servicios;
     }
-   //lista de estilistas de un servicio
-    public List<Estilista> findEstilistasServicios(int idServicio) throws SQLException{
+
+   //lista de estilistas de un servicio a la hora de hacer la cita
+
+    public List<Estilista> findEstilistasServicios(int idServicio, Cita fechaCita) throws SQLException{
         List<Estilista> estilistas = new ArrayList<>();
-        String sql = "SELECT e.nombre AS nombre_estilistas " +
-                "FROM empleado e JOIN estilista_servicio es ON e.id_empleado = es.id_estilista " +
+        String sql = "SELECT DISTINCT e.nombre AS nombre_estilistas, e.imagen_perfil " +
+                "FROM empleado e " +
+                "JOIN estilista_servicio es ON e.id_empleado = es.id_estilista " +
                 "JOIN servicio s ON es.id_servicio = s.id_servicio " +
-                "WHERE s.id_servicio = ?";
+                "JOIN estilista_horario eh ON e.id_empleado = eh.id_estilista " +
+                "JOIN horario h ON eh.id_horario = h.id_horario " +
+                "WHERE s.id_servicio = ? " +
+                "  AND h.dia_semana =  ELT(WEEKDAY(?) + 1, 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo') " +
+                "  AND TIME(?) BETWEEN h.hora_inicio AND h.hora_final";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ){
             stmt.setInt(1,idServicio);
+            stmt.setTimestamp(2, Timestamp.valueOf(fechaCita.getFechaCita()));
+            stmt.setTimestamp(3, Timestamp.valueOf(fechaCita.getFechaCita()));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 Estilista estilista = new Estilista();
-                estilista.setNombre(rs.getString("nombre_estilista"));
+                estilista.setNombre(rs.getString("nombre"));
+                estilista.setImagenPerfil(rs.getString("imagen_perfil"));
                 estilistas.add(estilista);
             }
         }
         return estilistas;
     }
+
+    //añadir horario a estilista
     public void saveHorarios(Estilista estilista) throws SQLException{
         String sql = "INSERT INTO estilista_horario(id_estilista, id_horario) VALUES (?,?)";
         try(
@@ -189,6 +196,7 @@ public class EstilistaRepository {
 
         }
     }
+    //añadir servicio a estilista
     public void saveServicios(Estilista relacion) throws SQLException{
         String sql = "INSERT INTO estilista_servicio(id_estilista, id_servicio) VALUES(?,?)";
         try(

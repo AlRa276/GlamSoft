@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FormularioRepository {
+    //mostrar todos los formularios
     public List<Formulario> findAll()throws SQLException{
         List<Formulario> formularios = new ArrayList<>();
         String sql = "SELECT * FROM formulario";

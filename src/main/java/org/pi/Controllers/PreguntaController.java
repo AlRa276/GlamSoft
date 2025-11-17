@@ -24,6 +24,15 @@ public class PreguntaController {
             ctx.status(500).result("Error al obtener las preguntas: " + e.getMessage());
         }
     }
+    public void findFormularioServicio(Context ctx) {
+        try{
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            List<Pregunta> preguntas = preguntaService.findFormularioServicio(id);
+            ctx.status(200).json(preguntas);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void findAll(Context ctx) {
         try {
             List<Pregunta> preguntas = preguntaService.findAll();

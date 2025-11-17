@@ -2,6 +2,7 @@ package org.pi.Controllers;
 
 
 import io.javalin.http.Context;
+import org.pi.Models.Cita;
 import org.pi.Models.Estilista;
 import org.pi.Models.Horario;
 import org.pi.Models.Servicio;
@@ -21,7 +22,8 @@ public class EstilistaController {
     public void fidnEstilistaServicio(Context ctx){
         try{
             int id = Integer.parseInt(ctx.pathParam("id"));
-            List<Estilista> estilistas = estilistaService.findEstilistaServicio(id);
+            Cita fecha = ctx.bodyAsClass(Cita.class);
+            List<Estilista> estilistas = estilistaService.findEstilistaServicio(id, fecha);
             ctx.status(200).json(estilistas);
         } catch (Exception e) {
             throw new RuntimeException(e);

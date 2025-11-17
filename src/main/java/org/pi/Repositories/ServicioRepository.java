@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServicioRepository {
-    //mostrar todos
+    //mostrar todos ADMIN
     public List<Servicio> findAll() throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         String sql = "SELECT * FROM servicio";
@@ -24,8 +24,8 @@ public class ServicioRepository {
                 int duracionMinutos = rs.getInt("duracion_minutos");
                 double precio = rs.getDouble("precio");
                 String descripcion = rs.getString("descripcion");
-                int categoriaId = rs.getInt("categoria_id");
-                Integer formularioId = rs.getObject("formulario_id") != null ? rs.getInt("formulario_id") : null;
+                int categoriaId = rs.getInt("id_categoria");
+                Integer formularioId = rs.getObject("id_formulario") != null ? rs.getInt("id_formulario") : null;
 
                 Servicio servicio = new Servicio(idServicio, imagen, nombreServicio, duracionMinutos, precio, descripcion, categoriaId, formularioId);
                 servicios.add(servicio);
@@ -66,8 +66,9 @@ public class ServicioRepository {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-                Servicio servicio = new Servicio();
-                servicio.setNombreServicio(rs.getString("nombre_servicio"));
+
+                String nombreServicio = rs.getString("nombre_servicio");
+                Servicio servicio = new Servicio(nombreServicio);
                 servicios.add(servicio);
             }
         }
@@ -99,7 +100,7 @@ public class ServicioRepository {
     }
 
     public int save(Servicio servicio) throws SQLException {
-        String sql = "INSERT INTO servicio(imagen, nombre_servicio, duracion_minutos, precio, descripcion, categoria_id, formulario_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO servicio(imagen, nombre_servicio, duracion_minutos, precio, descripcion, id_categoria, id_formulario) VALUES(?, ?, ?, ?, ?, ?, ?)";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -149,7 +150,7 @@ public class ServicioRepository {
     }
 
     public void update(Servicio servicio) throws SQLException {
-        String sql = "UPDATE servicio SET imagen = ?, nombre_servicio = ?, duracion_minutos = ?, precio = ?, descripcion = ?, categoria_id = ?, formulario_id = ? WHERE id_servicio = ?";
+        String sql = "UPDATE servicio SET imagen = ?, nombre_servicio = ?, duracion_minutos = ?, precio = ?, descripcion = ?, id_categoria = ?, id_formulario = ? WHERE id_servicio = ?";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);

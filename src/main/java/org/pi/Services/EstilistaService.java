@@ -1,4 +1,5 @@
 package org.pi.Services;
+import org.pi.Models.Cita;
 import org.pi.Models.Estilista;
 import org.pi.Models.Horario;
 import org.pi.Models.Servicio;
@@ -21,8 +22,8 @@ public class EstilistaService {
         return estilistaRepository.findAllEstilistas();
     }
 
-    public List<Estilista> findEstilistaServicio(int idServicio)throws SQLException{
-        return estilistaRepository.findEstilistasServicios(idServicio);
+    public List<Estilista> findEstilistaServicio(int idServicio, Cita fecha)throws SQLException{
+        return estilistaRepository.findEstilistasServicios(idServicio, fecha);
     }
 
     public EstilistaDTO findEstilistaById(int id) throws SQLException {

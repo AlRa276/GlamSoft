@@ -14,7 +14,5 @@ public class RolRouter {
         app.get("/roles",rolController::findAll);
         app.get("/roles/{id}",rolController::findById);
         app.post("/roles",rolController::saveRol);
-        app.delete("/roles/{id}",rolController::deleteRol);
-        app.patch("/roles",rolController::updateRol);
     }
 }

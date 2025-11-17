@@ -34,30 +34,19 @@ public class RolService {
     }
 
 
-    public void saveRol(Rol rol) throws SQLException {
+    public int saveRol(Rol rol) throws SQLException {
         if (rol == null) {
             throw new IllegalArgumentException("El objeto rol no puede ser nulo");
         }
         if (rol.getNombreRol() == null || rol.getNombreRol().isEmpty()) {
             throw new IllegalArgumentException("El nombre del rol no puede estar vacío");
         }
-        rolRepository.saveRol(rol);
-    }
-
-    public void updateRol(Rol rol) throws SQLException {
-        if (rol == null || rol.getIdRol() <= 0) {
-            throw new IllegalArgumentException("El rol o su ID no son válidos");
+        String nombreRol = rol.getNombreRol();
+        List<Rol> roles = findAllRol();
+        boolean existe = roles.stream().anyMatch(r -> r.getNombreRol().equalsIgnoreCase(nombreRol));
+        if (existe){
+            throw new IllegalArgumentException("Ya existe un rol con ese nombre");
         }
-        if (rol.getNombreRol() == null || rol.getNombreRol().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del rol no puede estar vacío");
-        }
-        rolRepository.updateRol(rol);
-    }
-
-    public void deleteRol(int idRol) throws SQLException {
-        if (idRol <= 0) {
-            throw new IllegalArgumentException("El ID del rol debe ser válido");
-        }
-        rolRepository.deleteRol(idRol);
+       return rolRepository.saveRol(rol);
     }
 }

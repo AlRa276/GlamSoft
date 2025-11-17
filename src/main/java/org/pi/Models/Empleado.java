@@ -1,52 +1,21 @@
 package org.pi.Models;
 
 public class Empleado extends Usuario {
-    private int idUsuario;//id_usuario es pk
     private String nombre;
     private String telefono;
     private int idEmpleado;
+    private String imagenPerfil;
+
     public Empleado() {
     }
 
-    public Empleado( int idRol,String email, String nombre, String telefono) {
-        super(idRol, email);
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
 
-    public Empleado( String email, String nombre, String telefono) {
-        super(email);
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
-
-    public Empleado(int idUsuario, String email, String password, int idRol, String nombre, String telefono) {
+    public Empleado(int idUsuario, String email, String password, int idRol, String nombre, String telefono, int idEmpleado, String imagenPerfil) {
         super(idUsuario, email, password, idRol);
         this.nombre = nombre;
         this.telefono = telefono;
-    }
-
-    public Empleado(int idUsuario, String nombre, String telefono) {
-        this.idUsuario = idUsuario;
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
-
-    public Empleado(int idUsuario, String email, String password, int idRol, int idUsuario1, String nombre, String telefono) {
-        super(idUsuario, email, password, idRol);
-        this.idUsuario = idUsuario1;
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
-
-    @Override
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    @Override
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+        this.idEmpleado = idEmpleado;
+        this.imagenPerfil = imagenPerfil;
     }
 
     public String getNombre() {
@@ -72,4 +41,14 @@ public class Empleado extends Usuario {
     public void setIdEmpleado(int idEmpleado) {
         this.idEmpleado = idEmpleado;
     }
+
+    public String getImagenPerfil() {
+        return imagenPerfil;
+    }
+
+    public void setImagenPerfil(String imagenPerfil) {
+        this.imagenPerfil = imagenPerfil;
+    }
+
+
 }

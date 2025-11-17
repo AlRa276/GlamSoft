@@ -55,7 +55,7 @@ public class ComentarioRepository {
         }
         return comentarios;
     }
-
+    //mostrar los ultimos 6 Comentarios hechos
     public List<Comentario> find8Comen() throws SQLException{
         List<Comentario> comentarios = new ArrayList<>();
         String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +

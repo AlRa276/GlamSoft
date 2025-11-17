@@ -10,6 +10,12 @@ public class Horario {
     public Horario() {
     }
 
+    public Horario(LocalTime horaInicio, LocalTime horaFin, String diaSemana) {
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.diaSemana = diaSemana;
+    }
+
     public Horario(int idHorario, LocalTime horaInicio, LocalTime horaFin, String diaSemana) {
         this.idHorario = idHorario;
         this.horaInicio = horaInicio;
