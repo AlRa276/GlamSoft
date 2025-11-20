@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id ("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+group = 'org.pi'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'io.javalin:javalin:6.7.0'
+    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+    implementation('com.mysql:mysql-connector-j:9.3.0')
+    implementation ('com.zaxxer:HikariCP:5.0.1')
+    implementation('com.password4j:password4j:1.6.3')
+    implementation('io.github.cdimascio:java-dotenv:3.0.0')
+    implementation('io.jsonwebtoken:jjwt-api:0.11.5')
+    runtimeOnly('io.jsonwebtoken:jjwt-impl:0.11.5')
+    runtimeOnly('io.jsonwebtoken:jjwt-jackson:0.11.5')
+}
+
+java {
+    // Asegúrate de usar esta versión para compilar
+    sourceCompatibility = JavaVersion.VERSION_17
+    // Y para que el bytecode generado sea compatible con Java 17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+// Reemplaza todo el bloque "tasks.named..." con este bloque:
+shadowJar {
+    archiveBaseName.set('GlamSoft')
+    archiveVersion.set('1.0-SNAPSHOT')
+    archiveClassifier.set('all')
+
+    // Configuración del Main-Class
+    manifest {
+        attributes('Main-Class': 'org.pi.Main')
+    }
+
+    // Establece el nombre final
+    archiveFileName.set("Back_GlamSoft2.jar")
+}
+
+test {
+    useJUnitPlatform()
+}

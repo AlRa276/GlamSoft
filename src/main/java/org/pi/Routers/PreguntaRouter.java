@@ -1,0 +1,21 @@
+package org.pi.Routers;
+
+import io.javalin.Javalin;
+import org.pi.Controllers.PreguntaController;
+
+public class PreguntaRouter {
+    private final PreguntaController preguntaController;
+
+    public PreguntaRouter(PreguntaController preguntaController) {
+        this.preguntaController = preguntaController;
+    }
+     public void register(Javalin app){
+        app.get("/preguntas",preguntaController::findAll);
+        app.get("/preguntas/{id}",preguntaController::findById);
+        app.get("/preguntas/servicios/{id}",preguntaController::findFormularioServicio);
+        app.get("/preguntas/formularios/{id}",preguntaController::findPreFormulario);
+        app.post("/preguntas",preguntaController::savePregunta);
+        app.delete("/preguntas/{id}",preguntaController::deletePregunta);
+        app.patch("/preguntas/{id}",preguntaController::updatePregunta);
+     }
+}
