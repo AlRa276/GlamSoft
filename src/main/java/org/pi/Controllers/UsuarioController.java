@@ -1,6 +1,7 @@
 package org.pi.Controllers;
 import io.javalin.http.Context;
 import org.pi.Models.Usuario;
+import org.pi.Models.Empleado;
 import org.pi.Services.UsuarioService;
 import io.javalin.http.HttpStatus;
 import com.password4j.Password;
@@ -37,6 +38,7 @@ public class UsuarioController {
             ctx.status(500).result(e.getMessage());
         }
     }
+
     public void verificarUsuario(Context ctx){
         Usuario usuario = ctx.bodyAsClass(Usuario.class);
         try{
@@ -65,6 +67,77 @@ public class UsuarioController {
         }
     }
 
+    public void registrarEmpleadoCompleto(Context ctx) {
+    try {
+        Empleado empleado = ctx.bodyAsClass(Empleado.class);
+
+        String hashedPass = Password.hash(empleado.getPassword())
+                                   .withBcrypt()
+                                   .getResult();
+        empleado.setPassword(hashedPass);
+
+        int idUsuario = usuarioService.saveEmpleadoCompleto(empleado);
+        empleado.setIdUsuario(idUsuario);
+
+        String token = tokenManager.issueToken("" + idUsuario);
+
+        ctx.status(201).json(Map.of(
+                "success", true,
+                "message", "Empleado registrado con éxito",
+                "idUsuario", idUsuario,
+                "token", token
+        ));
+    }
+    catch (IllegalArgumentException e) {
+        ctx.status(400).json(Map.of(
+                "success", false,
+                "message", e.getMessage()
+        ));
+    }
+    catch (SQLException e) {
+        ctx.status(500).json(Map.of(
+                "success", false,
+                "message", "Error al registrar empleado: " + e.getMessage()
+        ));
+    }
+    catch (Exception e) {
+        ctx.status(500).json(Map.of(
+                "success", false,
+                "message", e.getMessage()
+        ));
+    }
+    }
+
+    public void updateEmpleadoCompleto(Context ctx) {
+    try {
+        // Recibir JSON del body
+        Empleado empleado = ctx.bodyAsClass(Empleado.class);
+
+        // Usuario viene dentro porque Empleado extends Usuario
+        Usuario usuario = new Usuario(
+                empleado.getIdUsuario(),
+                empleado.getEmail(),
+                empleado.getPassword(),
+                empleado.getIdRol()
+        );
+
+        usuarioService.updateEmpleadoCompleto(usuario, empleado);
+
+        ctx.json(Map.of(
+                "success", true,
+                "message", "Empleado actualizado correctamente"
+        ));
+
+    } catch (IllegalArgumentException e) {
+        ctx.status(400).json(Map.of("error", e.getMessage()));
+
+    } catch (SQLException e) {
+        ctx.status(500).json(Map.of("error", "Error en base de datos: " + e.getMessage()));
+
+    } catch (Exception e) {
+        ctx.status(500).json(Map.of("error", e.getMessage()));
+    }
+}
     public void findUser(Context ctx){
         try{
             String email = ctx.pathParam("email");
@@ -77,8 +150,8 @@ public class UsuarioController {
 
     public void deleteUser(Context ctx){
         try{
-            String email = ctx.pathParam("email");
-            usuarioService.deleteUser(email);
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            usuarioService.deleteUser(id);
             ctx.status(204).result("Se elimino el recurso con exito");
         } catch (SQLException e) {
             ctx.status(404).result("No se encontro el elemento");

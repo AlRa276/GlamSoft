@@ -15,6 +15,7 @@ public class Empleado extends Usuario {
         this.nombre = nombre;
         this.telefono = telefono;
         this.idEmpleado = idEmpleado;
+        
         this.imagenPerfil = imagenPerfil;
     }
 

@@ -5,7 +5,7 @@ import org.pi.Models.Pregunta;
 import org.pi.Services.PreguntaService;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 public class PreguntaController {
 
@@ -78,13 +78,16 @@ public class PreguntaController {
             preguntaService.update(pregunta);
             ctx.status(200).result("Pregunta actualizada correctamente.");
         } catch (NumberFormatException e) {
-            ctx.status(400).result("El ID debe ser un número válido.");
+        ctx.status(400).result("El ID debe ser un número válido." + e.getMessage());
         } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
-        } catch (SQLException e) {
-            ctx.status(500).result("Error en la base de datos: " + e.getMessage());
+      
+        ctx.status(400).result("Error de validacion: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+        ctx.status(404).result("Error: " + e.getMessage());
+         } catch (SQLException e) {
+        ctx.status(500).result("Error en la base de datos: " + e.getMessage());
         } catch (Exception e) {
-            ctx.status(404).result(e.getMessage());
+        ctx.status(500).result("Error interno del servidor: " + e.getMessage());
         }
     }
 

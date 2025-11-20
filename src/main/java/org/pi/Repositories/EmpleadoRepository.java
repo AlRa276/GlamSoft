@@ -60,57 +60,6 @@ public class EmpleadoRepository {
             }
         }
         return empleado;
+    } 
+   
     }
-
-    public int save(Empleado empleado) throws SQLException{
-        String sql = "INSERT INTO empleado (nombre, telefono, id_usuario, imagen_perfil) VALUES (?, ?, ?, ?) " +
-                "WHERE id_usuario = ?";
-        try(
-                Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);)
-        {
-            stmt.setString(1, empleado.getNombre());
-            stmt.setString(2,empleado.getTelefono());
-            stmt.setInt(3, empleado.getIdUsuario());
-            stmt.setString(4,empleado.getImagenPerfil());
-            int filasAfectadas = stmt.executeUpdate();
-            //verficar
-            if (filasAfectadas == 0) {
-                throw new SQLException("No se pudo insertar el registro");
-            }
-            //obtener las claves
-            try(ResultSet claves = stmt.getGeneratedKeys()) {
-                if (claves.next()) {
-                    int id = claves.getInt(1);
-                    return id;
-                } else {
-                    throw new SQLException("No se encontro id");
-                }
-            }
-        }
-    }
-
-    public  void delete(int id_empleado) throws SQLException{
-        String sql = "DELETE FROM empleado WHERE id_empleado = ?";
-        try(
-                Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-        ){
-            stmt.setInt(1, id_empleado);
-            stmt.executeUpdate();
-        }
-    }
-
-    public void update(Empleado empleado)throws SQLException {
-        String sql = "UPDATE empleado SET nombre = ?, telefono = ? WHERE id_empleado = ? ";
-        try (
-                Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setString(1, empleado.getNombre());
-            stmt.setString(2, empleado.getTelefono());
-            stmt.setInt(3, empleado.getIdEmpleado());
-            stmt.executeUpdate();
-        }
-    }
-
-}

@@ -58,9 +58,9 @@ public class ComentarioRepository {
     //mostrar los ultimos 6 Comentarios hechos
     public List<Comentario> find8Comen() throws SQLException{
         List<Comentario> comentarios = new ArrayList<>();
-        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+        String  sql = "SELECT c.comentario, c.fecha_comentario, u.email AS email_cliente " +
                 "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
-                "ORDEN BY c.fecha_comentario DESC " +
+                "ORDER BY c.fecha_comentario DESC " +
                 "LIMIT 6";
         try(
                 Connection conn = DBconfig.getDataSource().getConnection();

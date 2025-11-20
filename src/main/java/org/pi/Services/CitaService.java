@@ -18,12 +18,12 @@ public class CitaService {
         this.citaRepository = citaRepository;
     }
 
-    public List<CitaDTO> citasPorMes(int mes, int año) throws SQLException {
-        return citaRepository.findCitasMes(mes, año);
+    public List<CitaDTO> citasPorMes(int mes, int anio) throws SQLException {
+        return citaRepository.findCitasMes(mes, anio);
     }
 
-    public List<CitaDTO> citasPorSemana(int año, int semana) throws SQLException {
-        return citaRepository.findCitasSemana(año, semana);
+    public List<CitaDTO> citasPorSemana(int anio, int semana) throws SQLException {
+        return citaRepository.findCitasSemana(anio, semana);
     }
 
     public List<CitaDTO> citasPorDia(LocalDate fecha) throws SQLException {

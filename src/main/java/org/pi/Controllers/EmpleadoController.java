@@ -16,12 +16,19 @@ public class EmpleadoController {
 
 
     public void findAll(Context ctx) {
+        
+
         try {
-            int idRol = Integer.parseInt(ctx.pathParam("idRol"));
+            int idRol = Integer.parseInt(ctx.pathParam("id"));
             List<Empleado> empleados = empleadoService.findAll(idRol);
+            if (empleados == null || empleados.isEmpty()) {
+                ctx.status(204).result("No se encontraron empleados");
+                return;
+            }else{
             ctx.status(200).json(empleados);
+        }
         } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
+            ctx.status(400).result("id invalido" + e.getMessage());
         } catch (SQLException e) {
             ctx.status(500).result("Error al obtener empleados: " + e.getMessage());
         }
@@ -36,43 +43,6 @@ public class EmpleadoController {
             ctx.status(400).result(e.getMessage());
         } catch (SQLException e) {
             ctx.status(500).result("Error al obtener el empleado: " + e.getMessage());
-        }
-    }
-
-
-    public void save(Context ctx) {
-        try {
-            Empleado empleado = ctx.bodyAsClass(Empleado.class);
-            int idGenerado = empleadoService.save(empleado);
-            ctx.status(201).result("Empleado creado con ID: " + idGenerado);
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al guardar el empleado: " + e.getMessage());
-        }
-    }
-
-    public void update(Context ctx) {
-        try {
-            Empleado empleado = ctx.bodyAsClass(Empleado.class);
-            empleadoService.update(empleado);
-            ctx.status(200).result("Empleado actualizado correctamente");
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al actualizar el empleado: " + e.getMessage());
-        }
-    }
-
-    public void delete(Context ctx) {
-        try {
-            int id = Integer.parseInt(ctx.pathParam("id"));
-            empleadoService.delete(id);
-            ctx.status(200).result("Empleado eliminado correctamente");
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
-        } catch (SQLException e) {
-            ctx.status(500).result("Error al eliminar el empleado: " + e.getMessage());
         }
     }
 }

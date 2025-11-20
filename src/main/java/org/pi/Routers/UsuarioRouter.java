@@ -11,10 +11,14 @@ public class UsuarioRouter {
     }
 
     public void register(Javalin app){
-        app.post("/resgistrar",usuarioController::registrarUsuario);
+        app.post("/registrar",usuarioController::registrarUsuario);
         app.post("/login",usuarioController::verificarUsuario);
-        app.get("/usuarios",usuarioController::findUser);
-        app.delete("/usuarios",usuarioController::deleteUser);
+        app.post("/empleados",usuarioController::registrarEmpleadoCompleto);
+        app.patch("/empleados",usuarioController::updateEmpleadoCompleto);
+        app.get("/usuarios/{email}",usuarioController::findUser);
+        app.delete("/usuarios/{id}",usuarioController::deleteUser);
         app.patch("/usuarios",usuarioController::updateUser);
+      
+       
     }
 }

@@ -20,9 +20,9 @@ public class CitaController {
     public void getCitasPorMes(Context ctx) {
         try{
             int mes = Integer.parseInt(ctx.queryParam("mes"));
-            int año = Integer.parseInt(ctx.queryParam("anio"));
+            int anio = Integer.parseInt(ctx.queryParam("anio"));
 
-            ctx.json(citaService.citasPorMes(mes, año));
+            ctx.json(citaService.citasPorMes(mes, anio));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -39,10 +39,10 @@ public class CitaController {
     }
     public void getCitasPorSemana(Context ctx) {
         try{
-            int año = Integer.parseInt(ctx.queryParam("anio"));
+            int anio = Integer.parseInt(ctx.queryParam("anio"));
             int semana = Integer.parseInt(ctx.queryParam("semana"));
 
-            ctx.json(citaService.citasPorSemana(año, semana));
+            ctx.json(citaService.citasPorSemana(anio, semana));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -62,7 +62,7 @@ public class ComentarioController {
                 }
 
         } catch (SQLException e) {
-            ctx.status(400).result("El recurso no se puede crear");
+            ctx.status(400).result("El recurso no se puede crear" + e.getMessage());
         }
     }
 

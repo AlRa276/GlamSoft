@@ -48,6 +48,14 @@ public class PreguntaService {
 
 
     public int save(Pregunta pregunta) throws SQLException {
+        String textoPregunta = pregunta.getPregunta();
+        int idFormulario = pregunta.getIdFormulario();
+
+        List<Pregunta> preguntasExistentes = preguntaRepository.FindFormulario(idFormulario);
+        boolean existe = preguntasExistentes.stream().anyMatch(p -> p.getPregunta().equalsIgnoreCase(textoPregunta));
+        if (existe) {
+            throw new IllegalArgumentException("Ya existe una pregunta con ese texto en el formulario.");
+        }
         if (pregunta.getPregunta() == null || pregunta.getPregunta().isBlank()) {
             throw new IllegalArgumentException("El texto de la pregunta es obligatorio.");
         }
@@ -55,10 +63,24 @@ public class PreguntaService {
             throw new IllegalArgumentException("Debe asignarse un formulario válido.");
         }
 
+
         return preguntaRepository.save(pregunta);
     }
 
     public void update(Pregunta pregunta) throws SQLException {
+        String textoPregunta = pregunta.getPregunta();
+        int idFormulario = pregunta.getIdFormulario();
+        int idPregunta = pregunta.getIdPregunta();
+        List<Pregunta> formulario = preguntaRepository.FindFormulario(idFormulario);
+        boolean duplicada = formulario.stream()
+        .anyMatch(p -> 
+            p.getPregunta().equalsIgnoreCase(textoPregunta) 
+            && p.getIdPregunta() != idPregunta
+        );
+
+        if (duplicada) {
+        throw new IllegalArgumentException("Ya existe una pregunta con ese texto en el formulario.");
+        }
         if (pregunta.getIdPregunta() <= 0) {
             throw new IllegalArgumentException("El ID de la pregunta debe ser mayor a cero.");
         }

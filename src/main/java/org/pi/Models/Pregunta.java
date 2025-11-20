@@ -12,6 +12,11 @@ public class Pregunta {
     public Pregunta(String pregunta) {
         this.pregunta = pregunta;
     }
+    public Pregunta(int idPregunta, String pregunta) {
+        this.idPregunta = idPregunta;
+        this.pregunta = pregunta;
+    }
+
 
     public Pregunta(int idPregunta, String pregunta, String respuesta, int idFormulario) {
         this.idPregunta = idPregunta;

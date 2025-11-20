@@ -11,10 +11,8 @@ public class EmpleadoRouter {
     }
 
     public void register(Javalin app){
-        app.get("/empleados/{id}/rol",empleadoController::findAll);
+        app.get("/empleados/rol/{id}",empleadoController::findAll);
         app.get("/empleados/{id}",empleadoController::findById);
-        app.post("/empleados",empleadoController::save);
-        app.patch("/empleados",empleadoController::update);
-        app.delete("/empleados/{id}",empleadoController::delete);
-    }
 }
+}
+
