@@ -13,13 +13,16 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-
-    public Usuario findUser(String email) throws SQLException{
-        if(email == null || email.isBlank()){
-            throw new IllegalArgumentException("El email del usuario es obligatorio");
+    // MODIFICADO: Buscar por ID en lugar de Email
+    public Usuario findById(int id) throws SQLException{
+        if(id <= 0){
+            throw new IllegalArgumentException("El ID del usuario debe ser mayor a cero");
         }
-        
-        return usuarioRepository.findUser(email);
+        return usuarioRepository.findById(id);
+    }
+
+    public List<Usuario> findAll() throws SQLException {
+        return usuarioRepository.findAll();
     }
 
     public Usuario findByUser(Usuario usuario) throws SQLException{
@@ -27,35 +30,28 @@ public class UsuarioService {
     }
 
     public int saveUser(Usuario usuario) throws SQLException{
+        // Validación básica de unicidad de email debería ir aquí o en DB (Unique key)
         return usuarioRepository.saveUser(usuario);
     }
 
-   public int saveEmpleadoCompleto(Empleado empleado) throws SQLException {
+    public int saveEmpleadoCompleto(Empleado empleado) throws SQLException {
+        if (empleado.getEmail() == null || empleado.getEmail().isBlank())
+            throw new IllegalArgumentException("El email del empleado es obligatorio");
+        if (empleado.getPassword() == null || empleado.getPassword().isBlank())
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        if (empleado.getNombre() == null || empleado.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre del empleado es obligatorio");
+        if (empleado.getTelefono() == null || empleado.getTelefono().isBlank())
+            throw new IllegalArgumentException("El teléfono es obligatorio");
+        if (empleado.getIdRol() <= 0)
+            throw new IllegalArgumentException("Debe tener un rol válido");
 
-    if (empleado.getEmail() == null || empleado.getEmail().isBlank())
-        throw new IllegalArgumentException("El email del empleado es obligatorio");
+        if(usuarioRepository.findByUser(new Usuario(0, empleado.getEmail(), null, 0)) != null){
+            throw new IllegalArgumentException("Ya existe un usuario con ese correo electrónico");
+        }
 
-    if (empleado.getPassword() == null || empleado.getPassword().isBlank())
-        throw new IllegalArgumentException("La contraseña es obligatoria");
-
-    if (empleado.getNombre() == null || empleado.getNombre().isBlank())
-        throw new IllegalArgumentException("El nombre del empleado es obligatorio");
-
-    if (empleado.getTelefono() == null || empleado.getTelefono().isBlank())
-        throw new IllegalArgumentException("El teléfono es obligatorio");
-
-    if (empleado.getIdRol() <= 0)
-        throw new IllegalArgumentException("Debe tener un rol válido");
-
-
-   if( usuarioRepository.findByUser(new Usuario(0, empleado.getEmail(), null, 0)) != null){
-       throw new IllegalArgumentException("Ya existe un usuario con ese correo electrónico");
+        return usuarioRepository.saveEmpleadoCompleto(empleado);
     }
-
-   
-    return usuarioRepository.saveEmpleadoCompleto(empleado);
-}
-
 
     public void deleteUser(int id) throws SQLException{
         if(id <= 0){
@@ -64,7 +60,7 @@ public class UsuarioService {
         usuarioRepository.deleteUser(id);
     }
 
-    public void updateUser( Usuario usuario) throws SQLException{
+    public void updateUser(Usuario usuario) throws SQLException{
         if(usuario.getEmail() == null || usuario.getEmail().isBlank()) {
             throw new IllegalArgumentException("El email del usuario es obligatorio");
         }
@@ -74,39 +70,31 @@ public class UsuarioService {
         if(usuario.getIdUsuario() <= 0){
             throw new IllegalArgumentException("El id del usuario debe ser mayor a cero");
         }
-        if(usuarioRepository.findByUser(usuario) == null){
+        // Verificamos existencia antes de actualizar
+        if(usuarioRepository.findById(usuario.getIdUsuario()) == null){
             throw new NoSuchElementException("No existe un usuario con ese id");
         }
-        boolean existe = usuarioRepository.findByUser(usuario).getEmail().equalsIgnoreCase(usuario.getEmail());
-        if(existe){
-            throw new IllegalArgumentException("Ya existe un usuario con ese correo electrónico");
-        }
-        usuarioRepository.updateUser( usuario);
+
+        usuarioRepository.updateUser(usuario);
     }
 
     public void updateEmpleadoCompleto(Usuario usuario, Empleado empleado) throws Exception {
-
         if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
             throw new IllegalArgumentException("El email no puede estar vacío");
         }
-
         if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
             throw new IllegalArgumentException("La contraseña no puede estar vacía");
         }
-
         if (empleado.getNombre() == null || empleado.getNombre().isBlank()) {
             throw new IllegalArgumentException("El nombre del empleado es obligatorio");
         }
-
         if (empleado.getTelefono() == null || empleado.getTelefono().isBlank()) {
             throw new IllegalArgumentException("El teléfono es obligatorio");
         }
-
         if (empleado.getIdEmpleado() <= 0 || usuario.getIdUsuario() <= 0) {
             throw new IllegalArgumentException("IDs inválidos");
         }
 
         usuarioRepository.updateEmpleado(usuario, empleado);
     }
-
 }

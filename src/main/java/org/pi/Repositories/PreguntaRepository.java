@@ -23,14 +23,20 @@ public class PreguntaRepository {
             try(ResultSet rs = stmt.executeQuery()){
                 while (rs.next()){
                     int idPregunta = rs.getInt("id_pregunta");
-                    String pregunta = rs.getString("texto_pregunta");
-                    Pregunta pregunta1 = new Pregunta(idPregunta, pregunta);
-                    preguntas.add(pregunta1);
+                    String preguntaTexto = rs.getString("texto_pregunta");
+                    
+                    // CORRECCIÓN: Asignar el idFormulario al objeto
+                    Pregunta pregunta = new Pregunta();
+                    pregunta.setIdPregunta(idPregunta);
+                    pregunta.setPregunta(preguntaTexto);
+                    pregunta.setIdFormulario(id); // <-- Ahora devuelve el ID del formulario
+                    
+                    preguntas.add(pregunta);
                 }
             }
         }
         return preguntas;
-    }
+    } 
     //enontrar preguntas de un formulario asociado a un servicio
     public List<Pregunta> FindFormularioServicio(int id) throws SQLException{
         List<Pregunta> preguntas = new ArrayList<>();

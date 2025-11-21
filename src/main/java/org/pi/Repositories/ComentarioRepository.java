@@ -10,17 +10,18 @@ import java.util.List;
 
 public class ComentarioRepository {
 
-    public List<Comentario> findAll() throws SQLException{
+    public List<Comentario> findAll() throws SQLException {
         List<Comentario> comentarios = new ArrayList<>();
-        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+        // CORREGIDO: Agregada coma antes de u.email y cambiado ORDEN por ORDER
+        String sql = "SELECT c.comentario, c.fecha_comentario, u.email AS email_cliente " +
                 "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
-                "ORDEN BY c.fecha_comentario DESC";
-        try(
+                "ORDER BY c.fecha_comentario DESC";
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
-        ){
-            while(rs.next()) {
+        ) {
+            while (rs.next()) {
                 Comentario comen = new Comentario();
                 comen.setComentario(rs.getString("comentario"));
                 Timestamp fecha = rs.getTimestamp("fecha_comentario");
@@ -32,42 +33,47 @@ public class ComentarioRepository {
         }
         return comentarios;
     }
-    public List<Comentario> findComenClien(int idClient) throws SQLException{
+
+    public List<Comentario> findComenClien(int idClient) throws SQLException {
         List<Comentario> comentarios = new ArrayList<>();
-        String  sql = "SELECT c.comentario, c.fecha_comentario u.email AS email_cliente " +
+        // CORREGIDO: Agregada coma antes de u.email
+        String sql = "SELECT c.comentario, c.fecha_comentario, u.email AS email_cliente " +
                 "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
-                "WHERE c.id_cliente = ?";
-        try(
+                "WHERE c.id_cliente = ? " +
+                "ORDER BY c.fecha_comentario DESC"; // Se añade orden para consistencia
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()
-        ){
-            stmt.setInt(1,idClient);
-            while(rs.next()) {
-                Comentario comen = new Comentario();
-                comen.setComentario(rs.getString("comentario"));
-                Timestamp fecha = rs.getTimestamp("fecha_comentario");
-                comen.setFechaComentario(fecha.toLocalDateTime());
-                comen.setEmailCliente(rs.getString("email_cliente"));
+        ) {
+            stmt.setInt(1, idClient);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Comentario comen = new Comentario();
+                    comen.setComentario(rs.getString("comentario"));
+                    Timestamp fecha = rs.getTimestamp("fecha_comentario");
+                    comen.setFechaComentario(fecha.toLocalDateTime());
+                    comen.setEmailCliente(rs.getString("email_cliente"));
 
-                comentarios.add(comen);
+                    comentarios.add(comen);
+                }
             }
         }
         return comentarios;
     }
+
     //mostrar los ultimos 6 Comentarios hechos
-    public List<Comentario> find8Comen() throws SQLException{
+    public List<Comentario> find8Comen() throws SQLException {
         List<Comentario> comentarios = new ArrayList<>();
-        String  sql = "SELECT c.comentario, c.fecha_comentario, u.email AS email_cliente " +
+        String sql = "SELECT c.comentario, c.fecha_comentario, u.email AS email_cliente " +
                 "FROM comentario c JOIN usuario u ON c.id_cliente = u.id_usuario " +
                 "ORDER BY c.fecha_comentario DESC " +
                 "LIMIT 6";
-        try(
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
-        ){
-            while(rs.next()) {
+        ) {
+            while (rs.next()) {
                 Comentario comen = new Comentario();
                 comen.setComentario(rs.getString("comentario"));
                 Timestamp fecha = rs.getTimestamp("fecha_comentario");
@@ -80,45 +86,45 @@ public class ComentarioRepository {
         return comentarios;
     }
 
-    public Comentario findById(int id) throws SQLException{
+    public Comentario findById(int id) throws SQLException {
         Comentario comen = null;
         String sql = "SELECT * FROM comentario WHERE id_comentario = ?";
-        try(
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
-                ){
+        ) {
             stmt.setInt(1, id);
-            try(ResultSet rs = stmt.executeQuery()){
-                if (rs.next()){
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
                     String comentario = rs.getString("comentario");
                     Timestamp fecha = rs.getTimestamp("fecha_comentario");
                     LocalDateTime fechaComentario = fecha.toLocalDateTime();
                     int idCita = rs.getInt("id_cita");
                     int idCliente = rs.getInt("id_cliente");
-                    comen = new Comentario(id,comentario,fechaComentario,idCita, idCliente);
+                    comen = new Comentario(id, comentario, fechaComentario, idCita, idCliente);
                 }
             }
         }
         return comen;
     }
 
-    public int save(Comentario comentario)throws SQLException{
+    public int save(Comentario comentario) throws SQLException {
         String sql = "INSERT INTO comentario(comentario, id_cita, id_cliente) VALUES(?,?,?)";
-        try(
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ){
+        ) {
             stmt.setString(1, comentario.getComentario());
-            stmt.setInt(2,comentario.getIdCita());
-            stmt.setInt(3,comentario.getIdCliente());
+            stmt.setInt(2, comentario.getIdCita());
+            stmt.setInt(3, comentario.getIdCliente());
             //verificacion
             int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas == 0){
+            if (filasAfectadas == 0) {
                 throw new SQLException("La insercion fallo");
             }
             //encontrar id
-            try(ResultSet claves = stmt.getGeneratedKeys()){
-                if(claves.next()){
+            try (ResultSet claves = stmt.getGeneratedKeys()) {
+                if (claves.next()) {
                     int id = claves.getInt(1);
                     return id;
                 } else {
@@ -128,21 +134,20 @@ public class ComentarioRepository {
         }
     }
 
-    public  void delete(int id) throws SQLException{
+    public void delete(int id) throws SQLException {
         String sql = "DELETE FROM comentario WHERE id_comentario = ?";
-        try(
+        try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
-                ){
+        ) {
             stmt.setInt(1, id);
             int filasAfectadas = stmt.executeUpdate();
             //verificacion
-            if (filasAfectadas == 0){
+            if (filasAfectadas == 0) {
                 System.out.println("No se encontro el id");
-            }else {
+            } else {
                 System.out.println("eliminacion exitosa");
-            };
+            }
         }
     }
-
 }

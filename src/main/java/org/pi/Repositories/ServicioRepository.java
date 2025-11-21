@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServicioRepository {
-    //mostrar todos ADMIN
+
+    // Mostrar todos (ADMIN)
     public List<Servicio> findAll() throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         String sql = "SELECT * FROM servicio";
@@ -25,7 +26,12 @@ public class ServicioRepository {
                 double precio = rs.getDouble("precio");
                 String descripcion = rs.getString("descripcion");
                 int categoriaId = rs.getInt("id_categoria");
-                Integer formularioId = rs.getObject("id_formulario") != null ? rs.getInt("id_formulario") : null;
+
+                // CORRECCIÓN: Manejo seguro de nulos para evitar Error 500
+                int formularioId = rs.getInt("id_formulario");
+                if (rs.wasNull()) {
+                    formularioId = 0; // Asignar 0 si es nulo
+                }
 
                 Servicio servicio = new Servicio(idServicio, imagen, nombreServicio, duracionMinutos, precio, descripcion, categoriaId, formularioId);
                 servicios.add(servicio);
@@ -33,10 +39,12 @@ public class ServicioRepository {
         }
         return servicios;
     }
-    //mostrar uno
+
+    // Mostrar uno
     public Servicio find(int id) throws SQLException {
         Servicio servicio = null;
-        String sql = "SELECT imagen, nombre_servicio, duracion_minutos, precio, descripcion FROM servicio WHERE id_servicio = ?";
+        // CORRECCIÓN: SELECT * para traer todos los datos necesarios
+        String sql = "SELECT * FROM servicio WHERE id_servicio = ?";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
@@ -49,14 +57,19 @@ public class ServicioRepository {
                     int duracionMinutos = rs.getInt("duracion_minutos");
                     double precio = rs.getDouble("precio");
                     String descripcion = rs.getString("descripcion");
-                    servicio = new Servicio( imagen, nombreServicio, duracionMinutos, precio, descripcion);
+                    int categoriaId = rs.getInt("id_categoria");
+
+                    int formularioId = rs.getInt("id_formulario");
+                    if (rs.wasNull()) formularioId = 0;
+
+                    servicio = new Servicio(id, imagen, nombreServicio, duracionMinutos, precio, descripcion, categoriaId, formularioId);
                 }
             }
         }
         return servicio;
     }
 
-    //mostrar los nombres de los servicio
+    // Mostrar los nombres de los servicios
     public List<Servicio> findNombresServicios() throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         String sql = "SELECT nombre_servicio FROM servicio ";
@@ -66,7 +79,6 @@ public class ServicioRepository {
                 ResultSet rs = stmt.executeQuery();
         ) {
             while (rs.next()) {
-
                 String nombreServicio = rs.getString("nombre_servicio");
                 Servicio servicio = new Servicio(nombreServicio);
                 servicios.add(servicio);
@@ -75,23 +87,28 @@ public class ServicioRepository {
         return servicios;
     }
 
-    //mostrar todos por categoria
+    // Mostrar todos por categoría
     public List<Servicio> findByCategoria(int idCategoria) throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
-        String sql = "SELECT imagen, nombre_servicio, duracion_minutos, precio, descripcion FROM servicio WHERE id_categoria = ?";
+        String sql = "SELECT * FROM servicio WHERE id_categoria = ?";
         try (
                 Connection conn = DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
             stmt.setInt(1, idCategoria);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
+                    int idServicio = rs.getInt("id_servicio");
                     String imagen = rs.getString("imagen");
                     String nombreServicio = rs.getString("nombre_servicio");
                     int duracionMinutos = rs.getInt("duracion_minutos");
                     double precio = rs.getDouble("precio");
                     String descripcion = rs.getString("descripcion");
-                    Servicio servicio = new Servicio( imagen, nombreServicio, duracionMinutos, precio, descripcion);
+
+                    int formularioId = rs.getInt("id_formulario");
+                    if (rs.wasNull()) formularioId = 0;
+
+                    Servicio servicio = new Servicio(idServicio, imagen, nombreServicio, duracionMinutos, precio, descripcion, idCategoria, formularioId);
                     servicios.add(servicio);
                 }
             }
@@ -112,8 +129,7 @@ public class ServicioRepository {
             stmt.setString(5, servicio.getDescripcion());
             stmt.setInt(6, servicio.getIdCategoria());
 
-
-            if (servicio.getIdFormulario() == 0) {
+            if (servicio.getIdFormulario() <= 0) {
                 stmt.setNull(7, Types.INTEGER);
             } else {
                 stmt.setInt(7, servicio.getIdFormulario());
@@ -162,8 +178,7 @@ public class ServicioRepository {
             stmt.setString(5, servicio.getDescripcion());
             stmt.setInt(6, servicio.getIdCategoria());
 
-
-            if (servicio.getIdFormulario() == 0 ) {
+            if (servicio.getIdFormulario() <= 0 ) {
                 stmt.setNull(7, Types.INTEGER);
             } else {
                 stmt.setInt(7, servicio.getIdFormulario());

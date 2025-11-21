@@ -11,14 +11,18 @@ public class UsuarioRouter {
     }
 
     public void register(Javalin app){
-        app.post("/registrar",usuarioController::registrarUsuario);
-        app.post("/login",usuarioController::verificarUsuario);
-        app.post("/empleados",usuarioController::registrarEmpleadoCompleto);
-        app.patch("/empleados",usuarioController::updateEmpleadoCompleto);
-        app.get("/usuarios/{email}",usuarioController::findUser);
-        app.delete("/usuarios/{id}",usuarioController::deleteUser);
-        app.patch("/usuarios",usuarioController::updateUser);
-      
-       
+        // Auth
+        app.post("/registrar", usuarioController::registrarUsuario);
+        app.post("/login", usuarioController::verificarUsuario);
+
+        // Empleados
+        app.post("/empleados", usuarioController::registrarEmpleadoCompleto);
+        app.patch("/empleados", usuarioController::updateEmpleadoCompleto);
+
+        // Usuarios (CRUD)
+        app.get("/usuarios", usuarioController::findAll);            // Listar todos
+        app.get("/usuarios/{id}", usuarioController::findById);      // Buscar por ID (Antes era por email)
+        app.delete("/usuarios/{id}", usuarioController::deleteUser); // Eliminar
+        app.patch("/usuarios", usuarioController::updateUser);       // Actualizar (requiere JSON con idUsuario)
     }
 }

@@ -13,8 +13,8 @@ public class DBconfig {
             String host = "localhost";
             String port = "3306";
             String user = "mariana";
-            String dbName = "pruebas";
-            String username = "mariana";
+            String dbName = "glamsoft";
+            String username = "root";
             String password = "1234";
             String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName;
 

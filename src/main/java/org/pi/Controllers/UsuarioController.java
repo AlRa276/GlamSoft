@@ -3,7 +3,6 @@ import io.javalin.http.Context;
 import org.pi.Models.Usuario;
 import org.pi.Models.Empleado;
 import org.pi.Services.UsuarioService;
-import io.javalin.http.HttpStatus;
 import com.password4j.Password;
 import java.util.Map;
 import java.sql.SQLException;
@@ -44,7 +43,9 @@ public class UsuarioController {
         try{
             Usuario user = usuarioService.findByUser(usuario);
             if (user == null){
-                throw new SQLException("Usuario no encontrado");
+                // 404 no encontrado si el email no existe
+                ctx.status(404).json(Map.of("error", "Usuario no encontrado"));
+                return;
             }
             boolean rs = Password.check(usuario.getPassword(),user.getPassword()).withBcrypt();
             if (rs){
@@ -56,11 +57,10 @@ public class UsuarioController {
                         "mensage","Usuario verificado"
                 ));
             }  else {
-                ctx.status(404).result("Usuario no encontrado");
+                ctx.status(403).json(Map.of("error", "Credenciales inválidas"));
             }
         } catch (SQLException e) {
-            ctx.status(403).json(Map.of(
-                    "error","Credenciales invalidad",
+            ctx.status(500).json(Map.of(
                     "success", false,
                     "message",e.getMessage()
             ));
@@ -68,83 +68,85 @@ public class UsuarioController {
     }
 
     public void registrarEmpleadoCompleto(Context ctx) {
-    try {
-        Empleado empleado = ctx.bodyAsClass(Empleado.class);
+        try {
+            Empleado empleado = ctx.bodyAsClass(Empleado.class);
+            String hashedPass = Password.hash(empleado.getPassword()).withBcrypt().getResult();
+            empleado.setPassword(hashedPass);
 
-        String hashedPass = Password.hash(empleado.getPassword())
-                                   .withBcrypt()
-                                   .getResult();
-        empleado.setPassword(hashedPass);
+            int idUsuario = usuarioService.saveEmpleadoCompleto(empleado);
+            empleado.setIdUsuario(idUsuario);
+            String token = tokenManager.issueToken("" + idUsuario);
 
-        int idUsuario = usuarioService.saveEmpleadoCompleto(empleado);
-        empleado.setIdUsuario(idUsuario);
-
-        String token = tokenManager.issueToken("" + idUsuario);
-
-        ctx.status(201).json(Map.of(
-                "success", true,
-                "message", "Empleado registrado con éxito",
-                "idUsuario", idUsuario,
-                "token", token
-        ));
-    }
-    catch (IllegalArgumentException e) {
-        ctx.status(400).json(Map.of(
-                "success", false,
-                "message", e.getMessage()
-        ));
-    }
-    catch (SQLException e) {
-        ctx.status(500).json(Map.of(
-                "success", false,
-                "message", "Error al registrar empleado: " + e.getMessage()
-        ));
-    }
-    catch (Exception e) {
-        ctx.status(500).json(Map.of(
-                "success", false,
-                "message", e.getMessage()
-        ));
-    }
+            ctx.status(201).json(Map.of(
+                    "success", true,
+                    "message", "Empleado registrado con éxito",
+                    "idUsuario", idUsuario,
+                    "token", token
+            ));
+        }
+        catch (IllegalArgumentException e) {
+            ctx.status(400).json(Map.of("success", false, "message", e.getMessage()));
+        }
+        catch (SQLException e) {
+            ctx.status(500).json(Map.of("success", false, "message", "Error BD: " + e.getMessage()));
+        }
+        catch (Exception e) {
+            ctx.status(500).json(Map.of("success", false, "message", e.getMessage()));
+        }
     }
 
     public void updateEmpleadoCompleto(Context ctx) {
-    try {
-        // Recibir JSON del body
-        Empleado empleado = ctx.bodyAsClass(Empleado.class);
+        try {
+            Empleado empleado = ctx.bodyAsClass(Empleado.class);
+            // Hashear password si se envía uno nuevo
+            if(empleado.getPassword() != null && !empleado.getPassword().isBlank()){
+                String hashedPass = Password.hash(empleado.getPassword()).withBcrypt().getResult();
+                empleado.setPassword(hashedPass);
+            }
 
-        // Usuario viene dentro porque Empleado extends Usuario
-        Usuario usuario = new Usuario(
-                empleado.getIdUsuario(),
-                empleado.getEmail(),
-                empleado.getPassword(),
-                empleado.getIdRol()
-        );
+            Usuario usuario = new Usuario(
+                    empleado.getIdUsuario(),
+                    empleado.getEmail(),
+                    empleado.getPassword(),
+                    empleado.getIdRol()
+            );
 
-        usuarioService.updateEmpleadoCompleto(usuario, empleado);
+            usuarioService.updateEmpleadoCompleto(usuario, empleado);
+            ctx.json(Map.of("success", true, "message", "Empleado actualizado correctamente"));
 
-        ctx.json(Map.of(
-                "success", true,
-                "message", "Empleado actualizado correctamente"
-        ));
-
-    } catch (IllegalArgumentException e) {
-        ctx.status(400).json(Map.of("error", e.getMessage()));
-
-    } catch (SQLException e) {
-        ctx.status(500).json(Map.of("error", "Error en base de datos: " + e.getMessage()));
-
-    } catch (Exception e) {
-        ctx.status(500).json(Map.of("error", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).json(Map.of("error", e.getMessage()));
+        } catch (SQLException e) {
+            ctx.status(500).json(Map.of("error", "Error en base de datos: " + e.getMessage()));
+        } catch (Exception e) {
+            ctx.status(500).json(Map.of("error", e.getMessage()));
+        }
     }
-}
-    public void findUser(Context ctx){
+
+    // NUEVO: Listar todos
+    public void findAll(Context ctx) {
+        try {
+            List<Usuario> usuarios = usuarioService.findAll();
+            ctx.json(usuarios);
+        } catch (SQLException e) {
+            ctx.status(500).result("Error interno: " + e.getMessage());
+        }
+    }
+
+    // MODIFICADO: Buscar por ID
+    public void findById(Context ctx){
         try{
-            String email = ctx.pathParam("email");
-            Usuario usuario = usuarioService.findUser(email);
-            ctx.json(usuario);
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            Usuario usuario = usuarioService.findById(id);
+            if(usuario != null) {
+                ctx.json(usuario);
+            } else {
+                ctx.status(404).result("No se encontro el usuario");
+            }
+        }catch (NumberFormatException e){
+            ctx.status(400).result("El ID debe ser un número entero");
         }catch (SQLException e){
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error interno");
         }
     }
 
@@ -152,19 +154,26 @@ public class UsuarioController {
         try{
             int id = Integer.parseInt(ctx.pathParam("id"));
             usuarioService.deleteUser(id);
-            ctx.status(204).result("Se elimino el recurso con exito");
+            ctx.status(200).result("Se elimino el recurso con exito"); // 200 o 204
+        } catch (NumberFormatException e) {
+            ctx.status(400).result("ID inválido");
         } catch (SQLException e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(500).result("Error interno");
         }
     }
 
     public void updateUser(Context ctx){
         try{
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
+            // Hash password si es necesario
+            if(usuario.getPassword() != null && !usuario.getPassword().isBlank()){
+                String hashedPass = Password.hash(usuario.getPassword()).withBcrypt().getResult();
+                usuario.setPassword(hashedPass);
+            }
             usuarioService.updateUser(usuario);
-            ctx.status(204).result("Se creo el elemento con exito");
+            ctx.status(200).result("Usuario actualizado con exito");
         } catch (Exception e) {
-            ctx.status(404).result("No se encontro el elemento");
+            ctx.status(400).result("Error: " + e.getMessage());
         }
     }
 }

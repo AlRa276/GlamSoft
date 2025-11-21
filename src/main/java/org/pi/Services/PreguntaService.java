@@ -68,32 +68,37 @@ public class PreguntaService {
     }
 
     public void update(Pregunta pregunta) throws SQLException {
-        String textoPregunta = pregunta.getPregunta();
-        int idFormulario = pregunta.getIdFormulario();
-        int idPregunta = pregunta.getIdPregunta();
-        List<Pregunta> formulario = preguntaRepository.FindFormulario(idFormulario);
-        boolean duplicada = formulario.stream()
-        .anyMatch(p -> 
-            p.getPregunta().equalsIgnoreCase(textoPregunta) 
-            && p.getIdPregunta() != idPregunta
-        );
-
-        if (duplicada) {
-        throw new IllegalArgumentException("Ya existe una pregunta con ese texto en el formulario.");
-        }
+        // 1. Validaciones básicas
         if (pregunta.getIdPregunta() <= 0) {
             throw new IllegalArgumentException("El ID de la pregunta debe ser mayor a cero.");
         }
+        if (pregunta.getPregunta() == null || pregunta.getPregunta().isBlank()) {
+            throw new IllegalArgumentException("El texto de la pregunta no puede estar vacío.");
+        }
 
+        // 2. Obtener la pregunta ORIGINAL de la BD para saber su formulario real
         Pregunta existente = preguntaRepository.find(pregunta.getIdPregunta());
         if (existente == null) {
             throw new NoSuchElementException("No se puede actualizar, la pregunta no existe.");
         }
 
-        if (pregunta.getPregunta() == null || pregunta.getPregunta().isBlank()) {
-            throw new IllegalArgumentException("El texto de la pregunta no puede estar vacío.");
+        // 3. Usar el idFormulario de la BD (el real), no el que viene (o falta) en el JSON
+        int idFormularioReal = existente.getIdFormulario();
+        String nuevoTexto = pregunta.getPregunta();
+
+        // 4. Buscar duplicados en el formulario correcto
+        List<Pregunta> formulario = preguntaRepository.FindFormulario(idFormularioReal);
+        boolean duplicada = formulario.stream()
+        .anyMatch(p -> 
+            p.getPregunta().equalsIgnoreCase(nuevoTexto) 
+            && p.getIdPregunta() != pregunta.getIdPregunta() // Ignorar la misma pregunta que estamos editando
+        );
+
+        if (duplicada) {
+            throw new IllegalArgumentException("Ya existe una pregunta con ese texto en este formulario.");
         }
 
+        // 5. Ejecutar actualización
         preguntaRepository.update(pregunta);
     }
 
