@@ -8,7 +8,7 @@ import org.pi.Models.Horario;
 import org.pi.Models.Servicio;
 import org.pi.Services.EstilistaService;
 import org.pi.dto.EstilistaDTO;
-
+import java.util.Map;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,8 +25,12 @@ public class EstilistaController {
             Cita fecha = ctx.bodyAsClass(Cita.class);
             List<Estilista> estilistas = estilistaService.findEstilistaServicio(id, fecha);
             ctx.status(200).json(estilistas);
+        } catch (IllegalArgumentException e) {
+            // Error de formato o ID inválido
+            ctx.status(400).json(Map.of("error", "Datos de solicitud inválidos: " + e.getMessage()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Errores internos de BD (SQLException, etc.)
+            ctx.status(500).json(Map.of("error", "Error interno al filtrar estilistas: " + e.getMessage()));
         }
     }
     public void findAll(Context ctx) {

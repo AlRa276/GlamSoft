@@ -9,15 +9,16 @@ public class CategoriaRepository {
 
     public List<Categoria> findAllCategoria() throws SQLException {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT nombre_categoria FROM categoria";
+        String sql = "SELECT * FROM categoria";
         try (
                 Connection conn = org.pi.Config.DBconfig.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
         ) {
             while(rs.next()){
+                int id = rs.getInt("id_categoria");
                 String nombre = rs.getString("nombre_categoria");
-                Categoria cat = new Categoria(nombre);
+                Categoria cat = new Categoria(id, nombre);
                 categorias.add(cat);
             }
         }
