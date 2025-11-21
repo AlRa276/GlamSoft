@@ -1,11 +1,20 @@
 package org.pi;
 import io.javalin.Javalin;
 import org.pi.Config.configModule;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.javalin.json.JavalinJackson;
 public class Main {
    
     public static void main(String[] args) {
+       ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         Javalin app = Javalin.create(config -> {
 
+            config.jsonMapper(new JavalinJackson(mapper, false));
+            
             config.bundledPlugins.enableCors(cors -> {
                 cors.addRule(rule -> {
                     rule.reflectClientOrigin = true;
@@ -32,7 +41,7 @@ public class Main {
         configModule.initValoracionRouter().register(app);
 
         // Ahora sí iniciar
-        app.start(7000);
+        app.start(7001);
 
         app.events(event -> {
             event.serverStartFailed(() -> {});

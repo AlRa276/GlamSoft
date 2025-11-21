@@ -17,6 +17,6 @@ public class ServicioRouter {
         app.get("/servicios/{id}",servicioController::findById);
         app.post("/servicios",servicioController::saveServicio);
         app.delete("/servicios/{id}",servicioController::deleteServicio);
-        app.patch("/servicios",servicioController::updateServicio);
+        app.patch("/servicios/{id}",servicioController::updateServicio);
     }
 }
